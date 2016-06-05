@@ -6,6 +6,6 @@ public class HalloWelt {
 
 		System.out.println("Hallo Welt, ihr Spackos");
 		System.out.println("ich bin so kluk ... K.L.U.K.");
-	}
+	}//CommitTest
 
 }
