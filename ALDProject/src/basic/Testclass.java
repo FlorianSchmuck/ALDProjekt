@@ -12,8 +12,8 @@ public class Testclass {
 		// TODO Auto-generated method stub
 		
 				try {
-					File fcity = new File("C:\\Users\\sueol\\git\\ALDProjekt\\ALDProject\\src\\citys.txt");
-					File fstreets = new File("C:\\Users\\sueol\\git\\ALDProjekt\\ALDProject\\src\\streets.txt");
+					File fcity = new File("src\\ressources\\citys.txt");
+					File fstreets = new File("src\\ressources\\streets.txt");
 					String s;
 					String parts[];
 					FileReader fr_city = new FileReader(fcity);
