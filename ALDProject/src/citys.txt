@@ -1,0 +1,10 @@
+public City(String name, int id) {
+Wien;1;
+Graz;2;
+Linz;3;
+Salzburg;4;
+Innsbruck;5;
+Klagenfurt;6;
+St.Poelten;7;
+Bregenz;8;
+Eisenstadt;9;
