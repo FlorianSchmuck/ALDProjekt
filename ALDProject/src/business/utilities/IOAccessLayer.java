@@ -1,6 +1,7 @@
 package business.utilities;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,8 +20,8 @@ public class IOAccessLayer {
 		return theInstance;
 	}
 	
-	public List<String> readFile(FileReader fileReader) throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
+	public List<String> readFile(File file) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		String line = "";
 		String[] splitLine = null;
 		List<String> fileContentList = new ArrayList<>();

@@ -5,10 +5,11 @@ import java.io.IOException;
 
 public interface BasicServer {
 
-	int Server_Port = 1111;
+	final int SERVER_PORT = 1111;
 	String ressourcePath = "src\\ressources\\";
 	
 	void initializeServer() throws IOException;
 	File getFileFromRessource(String fileName) throws IOException;
 	void startServerRoutine() throws Exception;
+	void destroyServer() throws IOException;
 }

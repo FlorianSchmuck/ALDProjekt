@@ -7,13 +7,10 @@ import java.net.ServerSocket;
 public abstract class BasicServerImpl implements BasicServer {
 	
 	protected ServerSocket serverSocket = null;
-	private boolean isServerActiv;
-	private boolean isClientActiv;
 	
 	@Override
 	public void initializeServer() throws IOException {
-		this.serverSocket = new ServerSocket(Server_Port);
-		switchToServerActiv();
+		this.serverSocket = new ServerSocket(SERVER_PORT);
 	}
 	
 	@Override
@@ -21,21 +18,9 @@ public abstract class BasicServerImpl implements BasicServer {
 		return new File(ressourcePath+fileName);
 	}
 	
-	public void switchToClientActiv() {
-		isClientActiv = true;
-		isServerActiv = false;
-	}
-	
-	public void switchToServerActiv() {
-		isClientActiv = false;
-		isServerActiv = true;
-	}
-	
-	public boolean isClientActiv() {
-		return isClientActiv;
-	}
-	
-	public boolean isServerActiv() {
-		return isServerActiv;
+	@Override
+	public void destroyServer() throws IOException {
+		this.serverSocket.close();
+		System.exit(1);
 	}
 }

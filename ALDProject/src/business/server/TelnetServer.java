@@ -22,20 +22,27 @@ public class TelnetServer extends BasicServerImpl {
 	// Maybe LinkedList??
 	private ArrayList<Street> streetGraphList;
 	private BufferedWriter serverCommand;
+	private boolean isServerActiv;
+	private boolean isClientActiv;
 
-	public static void main(String[] args) throws Exception {
-		try {
-			new TelnetServer();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("This is error!");
-		}
+	public static void main(String[] args) {
+		
+			try {
+				new TelnetServer();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 	}
 	
 	public TelnetServer() throws Exception {
 		super.initializeServer();
+		switchToServerActiv();
 		initializeTelnetServer();
 		readStreetsAndAddToGraph();
+		startServerRoutine();
+		
 	}
 
 	private void initializeTelnetServer() throws IOException {
@@ -46,7 +53,7 @@ public class TelnetServer extends BasicServerImpl {
 	}
 
 	private void readStreetsAndAddToGraph() throws Exception {
-		List<String> streetsFromFile = theIOAccessLayerInstance.readFile(new FileReader(streetsFile));
+		List<String> streetsFromFile = theIOAccessLayerInstance.readFile(streetsFile);
 		for (int i = 0; i < streetsFromFile.size(); i++) {
 			System.out.println(streetsFromFile.get(i));
 			// TODO street input -> FH Meeting
@@ -79,7 +86,7 @@ public class TelnetServer extends BasicServerImpl {
 	
 	@Override
 	public void startServerRoutine() throws Exception {
-		while (super.isServerActiv()) {
+		while (isServerActiv()) {
 			Socket clientSocket = super.serverSocket.accept();
 			switchToClientActiv();
 			WorkerThread workerThread = new WorkerThread();
@@ -91,5 +98,23 @@ public class TelnetServer extends BasicServerImpl {
 				responseToClient(clientSocket);
 			}
 		}
+	}
+	
+	public void switchToClientActiv() {
+		isClientActiv = true;
+		isServerActiv = false;
+	}
+	
+	public void switchToServerActiv() {
+		isClientActiv = false;
+		isServerActiv = true;
+	}
+	
+	public boolean isClientActiv() {
+		return isClientActiv;
+	}
+	
+	public boolean isServerActiv() {
+		return isServerActiv;
 	}
 }
