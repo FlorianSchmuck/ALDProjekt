@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import basic.Street;
+import beans.Street;
 import business.client.WorkerThread;
 import business.utilities.IOAccessLayer;
 
@@ -67,7 +67,7 @@ public class TelnetServer extends BasicServerImpl {
 		serverCommand.newLine();
 		serverCommand.write("Gestalten Sie die Eingabe wie folgt:");
 		serverCommand.newLine();
-		serverCommand.write("Startort ; Zielort ; Suchkritärium");
+		serverCommand.write("Startort ; Zielort ; Suchkriterium");
 		serverCommand.newLine();
 		serverCommand.flush();
 	}
@@ -88,8 +88,8 @@ public class TelnetServer extends BasicServerImpl {
 	public void startServerRoutine() throws Exception {
 		while (isServerActiv()) {
 			Socket clientSocket = super.serverSocket.accept();
-			switchToClientActiv();
-			WorkerThread workerThread = new WorkerThread();
+			//TODO new logic -> now: every iteration creates a new Thread
+			WorkerThread workerThread = new WorkerThread(clientSocket);
 			Thread clientThread = new Thread(workerThread);
 			clientThread.start();
 			startServerShell(clientSocket);

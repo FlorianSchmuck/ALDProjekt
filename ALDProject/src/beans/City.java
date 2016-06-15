@@ -1,4 +1,4 @@
-package basic;
+package beans;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

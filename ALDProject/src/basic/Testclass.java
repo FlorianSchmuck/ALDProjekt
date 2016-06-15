@@ -12,6 +12,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import beans.City;
+import beans.Street;
+
 public class Testclass {
 
 	public static ArrayList<Street> graph = new ArrayList<>();

@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 public class IOAccessLayer {
 	
 	private static IOAccessLayer theInstance;
@@ -18,6 +21,13 @@ public class IOAccessLayer {
 			theInstance = new IOAccessLayer();
 		}
 		return theInstance;
+	}
+	
+	public File chooseFileFromFileSystem(){
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.showOpenDialog(new JFrame("FileChooser"));
+		//TODO?
+		return null;
 	}
 	
 	public List<String> readFile(File file) throws IOException {

@@ -1,4 +1,4 @@
-package basic;
+package beans;
 import java.util.ArrayList;
 
 public class Street {

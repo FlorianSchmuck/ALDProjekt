@@ -21,6 +21,6 @@ public abstract class BasicServerImpl implements BasicServer {
 	@Override
 	public void destroyServer() throws IOException {
 		this.serverSocket.close();
-		System.exit(1);
+		System.exit(0);
 	}
 }
