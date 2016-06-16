@@ -3,7 +3,6 @@ package business.server;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -15,7 +14,7 @@ import beans.Street;
 import business.client.WorkerThread;
 import business.utilities.IOAccessLayer;
 
-public class TelnetServer extends BasicServerImpl {
+public class TelnetServer extends AbstractBasicServer {
 
 	private File cityFile, streetsFile;
 	private IOAccessLayer theIOAccessLayerInstance;
@@ -40,6 +39,9 @@ public class TelnetServer extends BasicServerImpl {
 		super.initializeServer();
 		switchToServerActiv();
 		initializeTelnetServer();
+		if (isChooseFromFileSystemEnabled) {
+			theIOAccessLayerInstance.chooseFileFromFileSystem();
+		}
 		readStreetsAndAddToGraph();
 		startServerRoutine();
 		

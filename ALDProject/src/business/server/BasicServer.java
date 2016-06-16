@@ -6,7 +6,8 @@ import java.io.IOException;
 public interface BasicServer {
 
 	final int SERVER_PORT = 1111;
-	String ressourcePath = "src\\ressources\\";
+	final boolean isChooseFromFileSystemEnabled = false;
+	final String ressourcePath = "src\\ressources\\";
 	
 	void initializeServer() throws IOException;
 	File getFileFromRessource(String fileName) throws IOException;

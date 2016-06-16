@@ -2,6 +2,7 @@ package business.utilities;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,9 +26,16 @@ public class IOAccessLayer {
 	
 	public File chooseFileFromFileSystem(){
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.showOpenDialog(new JFrame("FileChooser"));
-		//TODO?
-		return null;
+		File file = null;
+		if(fileChooser.showOpenDialog(new JFrame("FileChooser")) == JFileChooser.APPROVE_OPTION){
+			file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+			return file;
+		}
+		else
+		{	new FileNotFoundException();
+			return null;
+		}
+		
 	}
 	
 	public List<String> readFile(File file) throws IOException {
