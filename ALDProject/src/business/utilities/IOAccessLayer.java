@@ -11,6 +11,8 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
+import business.server.BasicServer;
+
 public class IOAccessLayer {
 	
 	private static IOAccessLayer theInstance;
@@ -35,7 +37,6 @@ public class IOAccessLayer {
 		{	new FileNotFoundException();
 			return null;
 		}
-		
 	}
 	
 	public List<String> readFile(File file) throws IOException {
@@ -44,7 +45,7 @@ public class IOAccessLayer {
 		String[] splitLine = null;
 		List<String> fileContentList = new ArrayList<>();
 		while ((line = bufferedReader.readLine()) != null) {
-			splitLine = line.split(";");
+			splitLine = line.split(BasicServer.fileSeparator);
 			//TODO: We know we can do better than n²
 			//Maybe directly create streets?!
 			for (String element: splitLine) {

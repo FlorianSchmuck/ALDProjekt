@@ -1,5 +1,7 @@
-package beans;
+package business.utilities;
 import java.util.Comparator;
+
+import beans.Street;
 
 public class CompareStreets implements Comparator<Street> {
 

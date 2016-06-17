@@ -25,14 +25,12 @@ public class TelnetServer extends AbstractBasicServer {
 	private boolean isClientActiv;
 
 	public static void main(String[] args) {
-		
 			try {
 				new TelnetServer();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
 	}
 	
 	public TelnetServer() throws Exception {
@@ -91,10 +89,10 @@ public class TelnetServer extends AbstractBasicServer {
 		while (isServerActiv()) {
 			Socket clientSocket = super.serverSocket.accept();
 			//TODO new logic -> now: every iteration creates a new Thread
-			WorkerThread workerThread = new WorkerThread(clientSocket);
+			startServerShell(clientSocket);
+			WorkerThread workerThread = new WorkerThread(clientSocket,serverCommand);
 			Thread clientThread = new Thread(workerThread);
 			clientThread.start();
-			startServerShell(clientSocket);
 
 			while (isClientActiv()) {
 				responseToClient(clientSocket);
