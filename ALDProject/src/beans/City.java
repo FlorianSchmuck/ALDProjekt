@@ -6,7 +6,7 @@ import java.util.List;
 
 import business.utilities.CompareStreets;
 
-public class City implements Comparator<Street> {
+public class City implements Comparator<City> {
 
 	private final String name;
 	private final int id;
@@ -40,15 +40,16 @@ public class City implements Comparator<Street> {
 	}
 
 	@Override
-	public int compare(Street o1, Street o2) {
+	public int compare(City o1, City o2) {
 		// TODO Auto-generated method stub
-		if (o1.getDistance() < o2.getDistance())
+		if (o1.getName().compareTo(o2.getName())>0 )
 			return 1;
-		else if (o1.getDistance() < o2.getDistance())
+		else if (o1.getName().compareTo(o2.getName())<0 )
 			return -1;
 		else return 0;
 
 	}
+	
 
 	@Override
 	public int hashCode() {
