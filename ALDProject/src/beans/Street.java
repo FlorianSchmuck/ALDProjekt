@@ -3,18 +3,18 @@ package beans;
 public class Street {
 
 	private final String name;
-	private final int id;
+	private final int streetId;
 	private final int distance;
-	private final int sourceCity_id;
-	private final int destinationCity_id;
+	private final int sourceCityId;
+	private final int destinationCityId;
 
-	public Street(String name, int id, int distance, int source_id, int destination_id) {
+	public Street(String name, int streetId,  int source_id, int destination_id,int distance) {
 		super();
 		this.name = name;
-		this.id = id;
+		this.streetId = streetId;
 		this.distance = distance;
-		this.sourceCity_id = source_id;
-		this.destinationCity_id = destination_id;
+		this.sourceCityId = source_id;
+		this.destinationCityId = destination_id;
 	}
 
 	public String getName() {
@@ -22,7 +22,7 @@ public class Street {
 	}
 
 	public int getId() {
-		return id;
+		return streetId;
 	}
 
 	public int getDistance() {
@@ -30,22 +30,22 @@ public class Street {
 	}
 
 	public int getSource_id() {
-		return sourceCity_id;
+		return sourceCityId;
 	}
 
 	public int getDestination_id() {
-		return destinationCity_id;
+		return destinationCityId;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + destinationCity_id;
+		result = prime * result + destinationCityId;
 		result = prime * result + distance;
-		result = prime * result + id;
+		result = prime * result + streetId;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + sourceCity_id;
+		result = prime * result + sourceCityId;
 		return result;
 	}
 
@@ -59,18 +59,18 @@ public class Street {
 		if (getClass() != obj.getClass())
 			return false;
 		Street other = (Street) obj;
-		if (destinationCity_id != other.destinationCity_id)
+		if (destinationCityId != other.destinationCityId)
 			return false;
 		if (distance != other.distance)
 			return false;
-		if (id != other.id)
+		if (streetId != other.streetId)
 			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (sourceCity_id != other.sourceCity_id)
+		if (sourceCityId != other.sourceCityId)
 			return false;
 		return true;
 	}
