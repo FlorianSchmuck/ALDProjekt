@@ -20,9 +20,9 @@ public class TelnetServer extends AbstractBasicServer {
 	private IOAccessLayer theIOAccessLayerInstance;
 	// Maybe LinkedList??
 	private ArrayList<Street> streetGraphList;
-	private BufferedWriter serverCommand;
-	private boolean isServerActiv;
-	private boolean isClientActiv;
+	private BufferedWriter trueServerCommand;
+	private boolean isServerActiv = true;
+	public static boolean isClientActiv;
 
 	public static void main(String[] args) {
 			try {
@@ -35,12 +35,10 @@ public class TelnetServer extends AbstractBasicServer {
 	
 	public TelnetServer() throws Exception {
 		super.initializeServer();
-		switchToServerActiv();
 		initializeTelnetServer();
 		if (isChooseFromFileSystemEnabled) {
 			theIOAccessLayerInstance.chooseFileFromFileSystem();
 		}
-		readStreetsAndAddToGraph();
 		startServerRoutine();
 		
 	}
@@ -52,69 +50,54 @@ public class TelnetServer extends AbstractBasicServer {
 		streetsFile = super.getFileFromRessource("streets.txt");
 	}
 
-	private void readStreetsAndAddToGraph() throws Exception {
-		List<String> streetsFromFile = theIOAccessLayerInstance.readFile(streetsFile);
-		for (int i = 0; i < streetsFromFile.size(); i++) {
-			System.out.println(streetsFromFile.get(i));
-			// TODO street input -> FH Meeting
-			// streetGraphList.add(new Street())
-		}
-	}
-
 	private void startServerShell(Socket clientSocket) throws Exception {
-		serverCommand = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-		serverCommand.write("Willkommen am Server ... bitte um Ihre Eingabe");
-		serverCommand.newLine();
-		serverCommand.write("Gestalten Sie die Eingabe wie folgt:");
-		serverCommand.newLine();
-		serverCommand.write("Startort ; Zielort ; Suchkriterium");
-		serverCommand.newLine();
-		serverCommand.flush();
+		trueServerCommand = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+		trueServerCommand.write("Willkommen am Server ... bitte um Ihre Eingabe");
+		trueServerCommand.newLine();
+		trueServerCommand.write("Gestalten Sie die Eingabe wie folgt:");
+		trueServerCommand.newLine();
+		trueServerCommand.write("Startort ; Zielort ; Suchkriterium");
+		trueServerCommand.newLine();
+		trueServerCommand.write("Beenden Sie die Session mit exit");
+		trueServerCommand.newLine();
+		trueServerCommand.flush();
 	}
 	
 	private void responseToClient(Socket clientSocket) throws Exception {
-		BufferedReader ClientResponse = new BufferedReader(
+		BufferedReader trueClientResponse = new BufferedReader(
 				new InputStreamReader(clientSocket.getInputStream()));
-		String[] ClientRequest = ClientResponse.readLine().split(";");
-		for (Street street : streetGraphList) {
-			if (street.getSource_id() == Integer.parseInt(ClientRequest[0])) {
-				serverCommand.write(street.toString());
-				serverCommand.flush();
+		String line;
+		String[] ClientRequest = trueClientResponse.readLine().split(BasicServer.fileSeparator);
+		while ((line = trueClientResponse.readLine()) != null){
+			if (line.equals("error")){
+				trueServerCommand.write("Bitte korrigieren Sie Ihre Eingabe");
+				trueServerCommand.flush();
 			}
+			else {
+				for (Street street : streetGraphList) {
+					if (street.getSource_id() == Integer.parseInt(ClientRequest[0])) {
+						trueServerCommand.write(street.toString());
+						trueServerCommand.flush();
+					}
+				}
+			}
+			
 		}
 	}
 	
 	@Override
 	public void startServerRoutine() throws Exception {
-		while (isServerActiv()) {
+		while (isServerActiv == true) {
 			Socket clientSocket = super.serverSocket.accept();
-			//TODO new logic -> now: every iteration creates a new Thread
 			startServerShell(clientSocket);
-			WorkerThread workerThread = new WorkerThread(clientSocket,serverCommand);
+			WorkerThread workerThread = new WorkerThread(clientSocket);
 			Thread clientThread = new Thread(workerThread);
 			clientThread.start();
-
-			while (isClientActiv()) {
+			
+			while (isClientActiv == true) {
 				responseToClient(clientSocket);
 			}
 		}
 	}
 	
-	public void switchToClientActiv() {
-		isClientActiv = true;
-		isServerActiv = false;
-	}
-	
-	public void switchToServerActiv() {
-		isClientActiv = false;
-		isServerActiv = true;
-	}
-	
-	public boolean isClientActiv() {
-		return isClientActiv;
-	}
-	
-	public boolean isServerActiv() {
-		return isServerActiv;
-	}
 }

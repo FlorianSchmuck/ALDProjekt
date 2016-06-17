@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
+import beans.Street;
 import business.server.BasicServer;
 
 public class IOAccessLayer {
@@ -39,17 +40,18 @@ public class IOAccessLayer {
 		}
 	}
 	
-	public List<String> readFile(File file) throws IOException {
+	public List<Street> readFile(File file) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		String line = "";
 		String[] splitLine = null;
-		List<String> fileContentList = new ArrayList<>();
+		List<Street> fileContentList = new ArrayList<>();
 		while ((line = bufferedReader.readLine()) != null) {
 			splitLine = line.split(BasicServer.fileSeparator);
-			//TODO: We know we can do better than n²
-			//Maybe directly create streets?!
-			for (String element: splitLine) {
-				fileContentList.add(element);
+			if (splitLine.length == 5){
+			fileContentList.add(new Street(splitLine[0], Integer.parseInt(splitLine[1]), Integer.parseInt(splitLine[2]), Integer.parseInt(splitLine[3]), Integer.parseInt(splitLine[4])));
+			}
+			else { 
+				continue;
 			}
 		}
 		bufferedReader.close();
