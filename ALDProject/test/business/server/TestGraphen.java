@@ -1,16 +1,15 @@
 package business.server;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import beans.ArrayGraph;
+import beans.City;
 import beans.ListGraph;
 import beans.Street;
-import beans.WeightedEdge;
+import business.utilities.IOAccessLayer;
 
 public class TestGraphen {
 
@@ -18,18 +17,9 @@ public class TestGraphen {
 		// TODO Auto-generated method stub
 		File f = new File("src\\ressources\\streets.txt");
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(f));
-			String s;
-			String[] inputArray;
-			ArrayList<Street> streets = new ArrayList<Street>();
-			while ((s = br.readLine()) != null) {
-				inputArray = s.split(";");
-				if (!(inputArray[0].equals("##")) && inputArray.length == 5) {
-					streets.add(
-							new Street(inputArray[0], Integer.parseInt(inputArray[1]), Integer.parseInt(inputArray[2]),
-									Integer.parseInt(inputArray[3]), Integer.parseInt(inputArray[4])));
-				}
-			}
+			IOAccessLayer acl =  IOAccessLayer.getTheInstance();
+			List<Street> streets = acl.readStreetsFile(new File(BasicServer.ressourcePath+"streets.txt"));			
+			
 
 			ListGraph listGraph = new ListGraph(streets.size(), true);
 			ArrayGraph arrayGraph = new ArrayGraph(streets.size(), true);
@@ -39,6 +29,14 @@ public class TestGraphen {
 			}
 			System.out.println(listGraph.hasEdge(1, 2));
 			System.out.println(arrayGraph.hasEdge(1, 2));
+			
+			List<City> cities = acl.readCityFile(new File(BasicServer.ressourcePath+"citys.txt"));
+			
+			for(City city : cities)
+			{
+				System.out.println(city.getName());
+			}
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
