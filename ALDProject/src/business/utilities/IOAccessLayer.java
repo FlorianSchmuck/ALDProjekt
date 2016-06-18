@@ -48,12 +48,7 @@ public class IOAccessLayer {
 		List<City> fileContentList = new ArrayList<>();
 		while ((line = bufferedReader.readLine()) != null) {
 			splitLine = line.split(BasicServer.fileSeparator);
-			if (splitLine.length == 5){
 			fileContentList.add(new City(splitLine[0], Integer.parseInt(splitLine[1])));
-			}
-			else { 
-				continue;
-			}
 		}
 		bufferedReader.close();
 		return fileContentList;
@@ -68,9 +63,6 @@ public class IOAccessLayer {
 			splitLine = line.split(BasicServer.fileSeparator);
 			if (splitLine.length == 5){
 			fileContentList.add(new Street(splitLine[0], Integer.parseInt(splitLine[1]), Integer.parseInt(splitLine[2]), Integer.parseInt(splitLine[3]), Integer.parseInt(splitLine[4])));
-			}
-			else { 
-				continue;
 			}
 		}
 		bufferedReader.close();
