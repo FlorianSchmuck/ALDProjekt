@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import beans.ArrayGraph;
 import beans.ListGraph;
 import beans.Street;
 import beans.WeightedEdge;
@@ -30,12 +31,15 @@ public class TestGraphen {
 				}
 			}
 			
-			ListGraph li = new ListGraph(streets.size(),true);
+			ListGraph listGraph = new ListGraph(streets.size(),true);
+			ArrayGraph arrayGraph = new ArrayGraph(streets.size(),true);
 			for (Street street: streets)
 			{
-				li.addEdge(street.getSource_id(),street.getDestination_id(),street.getDistance());
+				listGraph.addEdge(street.getSource_id(),street.getDestination_id(),street.getDistance());
+				arrayGraph.addEdge(street.getSource_id(),street.getDestination_id(),street.getDistance());
 			}
-				System.out.println(li.hasEdge(1,2));
+				System.out.println(listGraph.hasEdge(1,2));
+				System.out.println(arrayGraph.hasEdge(1,2));
 			
 			
 		} catch (FileNotFoundException e) {
