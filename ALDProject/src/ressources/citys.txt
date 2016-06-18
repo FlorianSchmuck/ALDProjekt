@@ -1,4 +1,3 @@
-public City(String name, int id) {
 Wien;1;
 Graz;2;
 Linz;3;
