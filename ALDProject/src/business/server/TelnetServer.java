@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 import beans.Street;
 import business.client.WorkerThread;
@@ -19,8 +18,8 @@ public class TelnetServer extends AbstractBasicServer {
 	private File cityFile, streetsFile;
 	private IOAccessLayer theIOAccessLayerInstance;
 	// Maybe LinkedList??
-	private ArrayList<Street> streetGraphList;
-	private BufferedWriter trueServerCommand;
+	private ArrayList<Street> streetList;
+	private BufferedWriter serverCommand;
 	private boolean isServerActiv = true;
 	public static boolean isClientActiv;
 
@@ -44,40 +43,40 @@ public class TelnetServer extends AbstractBasicServer {
 	}
 
 	private void initializeTelnetServer() throws IOException {
-		streetGraphList = new ArrayList<>();
+		streetList = new ArrayList<>();
 		theIOAccessLayerInstance = IOAccessLayer.getTheInstance();
 		cityFile = super.getFileFromRessource("citys.txt");
 		streetsFile = super.getFileFromRessource("streets.txt");
 	}
 
 	private void startServerShell(Socket clientSocket) throws Exception {
-		trueServerCommand = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-		trueServerCommand.write("Willkommen am Server ... bitte um Ihre Eingabe");
-		trueServerCommand.newLine();
-		trueServerCommand.write("Gestalten Sie die Eingabe wie folgt:");
-		trueServerCommand.newLine();
-		trueServerCommand.write("Startort ; Zielort ; Suchkriterium");
-		trueServerCommand.newLine();
-		trueServerCommand.write("Beenden Sie die Session mit exit");
-		trueServerCommand.newLine();
-		trueServerCommand.flush();
+		serverCommand = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+		serverCommand.write("Willkommen am Server ... bitte um Ihre Eingabe");
+		serverCommand.newLine();
+		serverCommand.write("Gestalten Sie die Eingabe wie folgt:");
+		serverCommand.newLine();
+		serverCommand.write("Startort ; Zielort ; Suchkriterium");
+		serverCommand.newLine();
+		serverCommand.write("Beenden Sie die Session mit exit");
+		serverCommand.newLine();
+		serverCommand.flush();
 	}
 	
 	private void responseToClient(Socket clientSocket) throws Exception {
-		BufferedReader trueClientResponse = new BufferedReader(
+		BufferedReader clientResponse = new BufferedReader(
 				new InputStreamReader(clientSocket.getInputStream()));
 		String line;
-		String[] ClientRequest = trueClientResponse.readLine().split(BasicServer.fileSeparator);
-		while ((line = trueClientResponse.readLine()) != null){
+		String[] ClientRequest = clientResponse.readLine().split(BasicServer.fileSeparator);
+		while ((line = clientResponse.readLine()) != null){
 			if (line.equals("error")){
-				trueServerCommand.write("Bitte korrigieren Sie Ihre Eingabe");
-				trueServerCommand.flush();
+				serverCommand.write("Bitte korrigieren Sie Ihre Eingabe");
+				serverCommand.flush();
 			}
 			else {
-				for (Street street : streetGraphList) {
+				for (Street street : streetList) {
 					if (street.getSource_id() == Integer.parseInt(ClientRequest[0])) {
-						trueServerCommand.write(street.toString());
-						trueServerCommand.flush();
+						serverCommand.write(street.toString());
+						serverCommand.flush();
 					}
 				}
 			}

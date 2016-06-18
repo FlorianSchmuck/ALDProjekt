@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
+import beans.City;
 import beans.Street;
 import business.server.BasicServer;
 
@@ -40,7 +41,25 @@ public class IOAccessLayer {
 		}
 	}
 	
-	public List<Street> readFile(File file) throws IOException {
+	public List<City> readCityFile(File file) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+		String line = "";
+		String[] splitLine = null;
+		List<City> fileContentList = new ArrayList<>();
+		while ((line = bufferedReader.readLine()) != null) {
+			splitLine = line.split(BasicServer.fileSeparator);
+			if (splitLine.length == 5){
+			fileContentList.add(new City(splitLine[0], Integer.parseInt(splitLine[1])));
+			}
+			else { 
+				continue;
+			}
+		}
+		bufferedReader.close();
+		return fileContentList;
+	}
+	
+	public List<Street> readStreetsFile(File file) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		String line = "";
 		String[] splitLine = null;
