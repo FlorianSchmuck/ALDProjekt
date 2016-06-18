@@ -62,26 +62,15 @@ public class TelnetServer extends AbstractBasicServer {
 		serverCommand.flush();
 	}
 	
-	private void responseToClient(Socket clientSocket) throws Exception {
+	public String responseToClient(Socket clientSocket) throws Exception {
 		BufferedReader clientResponse = new BufferedReader(
 				new InputStreamReader(clientSocket.getInputStream()));
 		String line;
 		String[] ClientRequest = clientResponse.readLine().split(BasicServer.fileSeparator);
-		while ((line = clientResponse.readLine()) != null){
-			if (line.equals("error")){
-				serverCommand.write("Bitte korrigieren Sie Ihre Eingabe");
-				serverCommand.flush();
-			}
-			else {
-				for (Street street : streetList) {
-					if (street.getSource_id() == Integer.parseInt(ClientRequest[0])) {
-						serverCommand.write(street.toString());
-						serverCommand.flush();
-					}
-				}
-			}
+		
+		return "Mario is Fancy";			// serverlogic implementieren
 			
-		}
+		
 	}
 	
 	@Override
@@ -89,7 +78,7 @@ public class TelnetServer extends AbstractBasicServer {
 		while (isServerActiv == true) {
 			Socket clientSocket = super.serverSocket.accept();
 			startServerShell(clientSocket);
-			WorkerThread workerThread = new WorkerThread(clientSocket);
+			WorkerThread workerThread = new WorkerThread(clientSocket, this);
 			Thread clientThread = new Thread(workerThread);
 			clientThread.start();
 			

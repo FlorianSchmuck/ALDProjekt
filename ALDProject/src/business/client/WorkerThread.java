@@ -15,11 +15,13 @@ public class WorkerThread implements Runnable{
 	private Socket socket;
 	private BufferedReader serverReader;
 	private BufferedWriter serverCommand;
+	private TelnetServer server;
 	
-	public WorkerThread(Socket socket) throws IOException {
+	public WorkerThread(Socket socket, TelnetServer server) throws IOException {
 		this.socket = socket;
 		serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		serverCommand = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		this.server = server;
 	}
 	
 	public void sendToServer(String msg) throws IOException{
@@ -38,18 +40,25 @@ public class WorkerThread implements Runnable{
 	@Override
 	public void run() {
 		String line = "";
-		int plauseCheck = 2;
+		int plauseCheck = 3;
 		try {
-			while((line = serverReader.readLine()) != null) {
-				if (line.split(BasicServer.fileSeparator).length != plauseCheck){
-				sendToServer("wrong Input");
+			while(true) {
+				line = serverReader.readLine();
+				if (line.split(":").length == plauseCheck){
+					sendToServer(server.responseToClient(socket));
 				}
+				else if (line.equals("exit")){
+						break;
+					}
 				else {
-					sendToServer(line);
+					sendToServer("wrong Input");
 				}
 			}	
 			close();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
