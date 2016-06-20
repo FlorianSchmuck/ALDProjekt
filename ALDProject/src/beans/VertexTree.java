@@ -8,8 +8,10 @@ public class VertexTree {
 	private int count = 0;
 	private int index = 0 ;
 	private int capicity;
+	private Nodes root;
 	
 	public VertexTree(int size,List<City> cityList){
+		root = null;
 		capicity = size +1; 
 		vertextTreeArray = new City[capicity]; // Kapazität Baum festlegen
 		initializeTree(cityList);
