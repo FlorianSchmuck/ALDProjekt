@@ -12,7 +12,7 @@ public class City implements Comparator<City> {
 	private final String name;
 	private final int id;
 	// private List<Street> streets = new ArrayList<Street>();
-	private VertexHeap vHeap;
+	private EdgeHeap vHeap;
 
 	public City(String name, int id) {
 		super();
@@ -46,7 +46,7 @@ public class City implements Comparator<City> {
 	 * public ArrayList<Street> getStreets() { return (ArrayList<Street>)
 	 * streets; }
 	 */
-	public VertexHeap getVertexHeap() {
+	public EdgeHeap getVertexHeap() {
 		return vHeap;
 	}
 

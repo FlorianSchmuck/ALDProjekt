@@ -14,7 +14,7 @@ public class PrimMinimumSpanningTree {
 		}
 		weight[0] = 0;		// Start bei beliebigem Knoten
 		
-		VertexHeap vheap = new VertexHeap(g.numVertices());
+		EdgeHeap vheap = new EdgeHeap(g.numVertices());
 		for (int i=0; i < g.numVertices(); i++)
 			vheap.insert(new WeightedEdge(i, weight[i]));
 

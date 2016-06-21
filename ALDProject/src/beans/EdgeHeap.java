@@ -1,9 +1,9 @@
 package beans;
 
-public class VertexHeap {
+public class EdgeHeap {
 	
 	private int capicity;
-	private WeightedEdge[] pvertex;
+	private WeightedEdge[] pedge;
 	private int count = 0;
 	private int next = 1;
 	
@@ -11,9 +11,9 @@ public class VertexHeap {
 		return count;
 	}
 	
-	public VertexHeap(int size) {
+	public EdgeHeap(int size) {
 		this.capicity = size+1;
-		pvertex = new WeightedEdge[size+1];
+		pedge = new WeightedEdge[size+1];
 	}
 	
 	private int parent(int pos) {
@@ -33,14 +33,14 @@ public class VertexHeap {
 	}
 	
 	private int prio(int pos) {
-		return pvertex[pos].weight;
+		return pedge[pos].weight;
 	}
 	
 	private void exchange(int pos1, int pos2) {
 		WeightedEdge temp;
-		temp = pvertex[pos1];
-		pvertex[pos1] = pvertex[pos2];
-		pvertex[pos2] = temp;
+		temp = pedge[pos1];
+		pedge[pos1] = pedge[pos2];
+		pedge[pos2] = temp;
 	}
 	
 	private void swim(int pos) {
@@ -106,7 +106,7 @@ public class VertexHeap {
 		if (isFull())
 			return false;
 		int i = next;
-		pvertex[i] = pv;
+		pedge[i] = pv;
 		next++;
 		count++;
 		swim(i);
@@ -117,9 +117,9 @@ public class VertexHeap {
 		WeightedEdge result;
 		if (count == 0)
 			return null;
-		result = pvertex[1];
-		pvertex[1] = pvertex[next-1];
-		pvertex[next-1] = null;
+		result = pedge[1];
+		pedge[1] = pedge[next-1];
+		pedge[next-1] = null;
 		next--;
 		count--;
 		sink(1);
@@ -128,9 +128,9 @@ public class VertexHeap {
 	
 	public void setPriority(int vertex, int value) {
 		for (int i=1; i <= count; i++) {
-			if (pvertex[i].vertexID == vertex) {
-				int oldprio = pvertex[i].weight;
-				pvertex[i].weight = value;
+			if (pedge[i].vertexID == vertex) {
+				int oldprio = pedge[i].weight;
+				pedge[i].weight = value;
 				if (value < oldprio)
 					swim(i);
 				else
@@ -142,7 +142,7 @@ public class VertexHeap {
 	
 	public boolean contains(WeightedEdge we) {
 		for (int i=1; i <= count; i++) {
-			if (pvertex[i].vertexID == we.vertexID)
+			if (pedge[i].vertexID == we.vertexID)
 				return true;
 		}
 		return false;

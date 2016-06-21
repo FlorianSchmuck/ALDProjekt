@@ -31,8 +31,8 @@ public class ListGraph extends Graph {
 	}
 	
 	public boolean hasEdge(int source, int destination) {
-		WeightedEdge pv = findEdge(source, destination);
-		return pv != null;
+		WeightedEdge pe = findEdge(source, destination);
+		return pe != null;
 	}
 	
 	public int getEdgeWeight(int source, int destination) {
