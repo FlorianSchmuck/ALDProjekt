@@ -14,21 +14,21 @@ public class PrimMinimumSpanningTree {
 		}
 		weight[0] = 0;		// Start bei beliebigem Knoten
 		
-		EdgeHeap vheap = new EdgeHeap(g.numVertices());
+		EdgeHeap eheap = new EdgeHeap(g.numVertices());
 		for (int i=0; i < g.numVertices(); i++)
-			vheap.insert(new WeightedEdge(i, weight[i]));
+			eheap.insert(new WeightedEdge(i, weight[i]));
 
-		while (!vheap.isEmpty()) {
-			int u = vheap.remove().vertexID;
+		while (!eheap.isEmpty()) {
+			int u = eheap.remove().vertexID;
 			List<WeightedEdge> le = g.getEdges(u);
 			for (int i=0; i < le.size(); i++) {
 				WeightedEdge we = le.get(i);
 				int v = we.vertexID;
-				if (vheap.contains(we)) {
+				if (eheap.contains(we)) {
 					if (we.weight < weight[v]) {
 						weight[v] = we.weight;
 						pred[v] = u;
-						vheap.setPriority(v, we.weight);
+						eheap.setPriority(v, we.weight);
 					}
 				}
 			}
