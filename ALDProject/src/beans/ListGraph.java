@@ -52,6 +52,14 @@ public class ListGraph extends Graph {
 			graph[destination].add(pv);
 		}
 	}
+	public void debugPrint()
+	{
+		for(int i =0; i<graph.length;i++)
+		{
+			for(WeightedEdge e: graph[i])
+				System.out.println("From " + i + " to " + e.vertexID+":"+e.weight);
+		}
+	}
 	
 
 

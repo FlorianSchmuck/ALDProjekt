@@ -10,4 +10,5 @@ public abstract class Graph {
 	public abstract void addEdge(int u, int v, int weight);
 	public abstract void removeEdge(int u, int v);
 	public abstract List<WeightedEdge> getEdges(int v);
+	public abstract void debugPrint();
 }

@@ -1,7 +1,10 @@
 package beans;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import business.utilities.CompareWeightedEdge;
 
 
 public class ArrayGraph extends Graph {
@@ -38,6 +41,15 @@ public class ArrayGraph extends Graph {
 			graph[destination][source] = weight;
 	}
 	
+	public void debugPrint()
+	{
+		for(int i =0; i<numVertices;i++)
+		{
+			for(int j =0; j<numVertices;j++)
+				System.out.println("From " + i + " to " + j+":"+graph[i][j]);
+		}
+	}
+	
 	public void removeEdge(int source, int destination) {
 		graph[source][destination] = 0;
 		if (directed)
@@ -50,6 +62,7 @@ public class ArrayGraph extends Graph {
 			if (graph[vertexID][i] > 0) {
 				edges.add(new WeightedEdge(i, graph[vertexID][i]));
 			}
+		Collections.sort(edges,new CompareWeightedEdge());
 		}
 		return edges;
 	}

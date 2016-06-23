@@ -1,9 +1,16 @@
 package beans;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
+
+import business.server.BasicServer;
+import business.utilities.CompareWeightedEdge;
+import business.utilities.IOAccessLayer;
 
 public class Main {
 
@@ -12,7 +19,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		Graph g = new ListGraph(10, false);
+		
 
 		// 0: Graz
 		// 1: Wien
@@ -21,17 +28,26 @@ public class Main {
 		// 4: Inschbruck
 		// 5: St. Pölten
 		// 6: Linz
+		IOAccessLayer acl;
+		Graph g = null;
+		try {
+			acl = IOAccessLayer.getTheInstance();
+			List<Street> streets = acl.readStreetsFile(new File(BasicServer.ressourcePath+"streets.txt"));			
+			List<City> cities = acl.readCityFile(new File(BasicServer.ressourcePath+"citys.txt"));
+			g = new ListGraph(streets.size(), true);
+			for(Street s : streets)
+			{
+			g.addEdge(s.getSource_id(),s.getDestination_id(),s.getDistance());	
+			}
+			//g.debugPrint();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		g.addEdge(0, 1, 200);
-		g.addEdge(0, 2, 130);
-		g.addEdge(2, 3, 230);
-		g.addEdge(1, 6, 150);
-		g.addEdge(6, 3, 140);
-		g.addEdge(3, 4, 200);
-		g.addEdge(2, 4, 200);
-		g.addEdge(0, 4, 1000);
 
-		findByTiefenSucheRekursiv(g, 0, 4);
+		findByTiefenSucheRekursiv(g, 1, 8);
 
 		// findByTiefenSuche(g, 0, 4);
 		// findByBreitenSuche(g, 0, 4);
@@ -40,34 +56,36 @@ public class Main {
 	}
 
 	private static void findByTiefenSucheRekursiv(Graph g, int von, int nach) {
-
 		boolean[] visited = new boolean[g.numVertices()];
 		int[] pred = new int[g.numVertices()];
+		ArrayList<Integer> flow = new ArrayList<Integer>();
 
 		// pred[5] = 0
 		// Wir besuchen 5 über 0
 
-		_findByTiefenSucheRekursiv(g, von, nach, visited, pred);
-
-		for (int i = 0; i < pred.length; i++) {
-			System.out.println(i + " über " + pred[i]);
+		_findByTiefenSucheRekursiv(g, von, nach, visited, pred,flow);
+		/*for (int i = 0; i < pred.length; i++) {
+			if(visited[i])
+			System.out.println("from "+ pred[i]+" to " + i );
 		}
+		*/
+		System.out.println(flow);
 	}
 
-	private static boolean _findByTiefenSucheRekursiv(Graph g, int current, int nach, boolean[] visited, int[] pred) {
-
+	private static boolean _findByTiefenSucheRekursiv(Graph g, int current, int nach, boolean[] visited, int[] pred, ArrayList<Integer> flow) {
+		visited[current]=true;
+		flow.add(current);
 		if (current == nach)
+		{
 			return true;
-
-		visited[current] = true;
+		}
 
 		List<WeightedEdge> nachbarn = g.getEdges(current);
 		for (WeightedEdge n : nachbarn) {
-
 			if (!visited[n.vertexID]) {
 				pred[n.vertexID] = current;
 
-				boolean found = _findByTiefenSucheRekursiv(g, n.vertexID, nach, visited, pred);
+				boolean found = _findByTiefenSucheRekursiv(g, n.vertexID, nach, visited, pred,flow);
 				if (found)
 					return true;
 
@@ -113,6 +131,7 @@ public class Main {
 		if (found) {
 			// Route ausgeben
 			for (int i = 0; i < pred.length; i++) {
+				if(visited[i])
 				System.out.println(i + " über " + pred[i]);
 			}
 		} else {
@@ -223,7 +242,6 @@ public class Main {
 				break;
 
 			List<WeightedEdge> nachbarn = g.getEdges(cur.vertexID);
-
 			for (WeightedEdge nachbar : nachbarn) {
 
 				int distBisHier = dist[cur.vertexID]; // Alt: cur.weight
