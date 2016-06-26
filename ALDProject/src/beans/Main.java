@@ -19,13 +19,6 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		// 0: Graz
-		// 1: Wien
-		// 2: Klagenfurt
-		// 3: Salzburg
-		// 4: Inschbruck
-		// 5: St. Pölten
-		// 6: Linz
 		IOAccessLayer acl;
 		Graph g = null;
 		try {
@@ -36,34 +29,30 @@ public class Main {
 			for (Street s : streets) {
 				g.addEdge(s.getSource_id(), s.getDestination_id(), s.getDistance());
 			}
-			// g.debugPrint();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		// findByTiefenSucheRekursiv(g, 1, 8);
+		//findByTiefenSucheRekursiv(g, 1, 8);
 
-		findByBreitenSuche(g, 7, 6);
-		// dijkstra(g, 0, 4);
+		//findByBreitenSuche(g, 7, 6);
+		//dijkstraLichteGraphen(g, 7, 6);
+		dijkstraDichteGraphen(g, 9, 5);
+
 
 	}
 
 	private static void findByTiefenSucheRekursiv(Graph g, int von, int nach) {
 		// Oliver: funktioniert
+		
 		boolean[] visited = new boolean[g.numVertices()];
 		int[] pred = new int[g.numVertices()];
 		ArrayList<Integer> flow = new ArrayList<Integer>();
 
-		// pred[5] = 0
-		// Wir besuchen 5 über 0
-
 		_findByTiefenSucheRekursiv(g, von, nach, visited, pred, flow);
-		/*
-		 * for (int i = 0; i < pred.length; i++) { if(visited[i])
-		 * System.out.println("from "+ pred[i]+" to " + i ); }
-		 */
+
 		System.out.println(flow);
 	}
 
@@ -118,23 +107,12 @@ public class Main {
 	 * 
 	 * }
 	 */
-	private static int nextVertex(int[] dist, boolean[] visited) {
 
-		int minValue = 99999;
-		int minIndex = -1;
-
-		for (int i = 0; i < dist.length; i++) {
-			if (!visited[i] && dist[i] < minValue) {
-				minValue = dist[i];
-				minIndex = i;
-			}
-		}
-		return minIndex;
-	}
 
 	// Variante ohne Heap für dichte Graphen
-	private static void dijkstra2(Graph g, int von, int nach) {
-
+	private static void dijkstraDichteGraphen(Graph g, int von, int nach) {
+		//Oliver: funktioniert
+		System.out.println(g.numVertices());
 		int[] pred = new int[g.numVertices()];
 		int[] dist = new int[g.numVertices()];
 		boolean[] visited = new boolean[g.numVertices()];
@@ -169,7 +147,9 @@ public class Main {
 
 		// Pred ausgeben
 		for (int i = 0; i < pred.length; i++) {
+			if(pred[i]!=-1)
 			System.out.println(i + " über " + pred[i]);
+			//Ausgabe nur wenn Edge besucht wurde
 		}
 
 		// Way ausgeben
@@ -180,12 +160,26 @@ public class Main {
 		}
 		System.out.println();
 	}
+	
+	private static int nextVertex(int[] dist, boolean[] visited) {
 
-	private static ArrayList<Integer> predToWay(int[] pred, int from, int to) {
+		int minValue = 99999;
+		int minIndex = -1;
+
+		for (int i = 0; i < dist.length; i++) {
+			if (!visited[i] && dist[i] < minValue) {
+				minValue = dist[i];
+				minIndex = i;
+			}
+		}
+		return minIndex;
+	}
+
+	private static ArrayList<Integer> predToWay(int[] pred, int from, int too) {
 
 		ArrayList<Integer> way = new ArrayList<Integer>();
 
-		int i = to;
+		int i = too;
 		while (i != from) {
 			way.add(0, i);
 			i = pred[i];
@@ -196,7 +190,7 @@ public class Main {
 	}
 
 	// Variante mit Heap für lichte Graphen
-	private static void dijkstra(Graph g, int von, int nach) {
+	private static void dijkstraLichteGraphen(Graph g, int von, int nach) {
 
 		int[] pred = new int[g.numVertices()];
 		int[] dist = new int[g.numVertices()];
@@ -290,12 +284,16 @@ public class Main {
 			for (WeightedEdge nachbar : nachbarn) {
 				if (!visited[nachbar.vertexID]) {
 					nodes.add(nachbar.vertexID);
-					pred[nachbar.vertexID] = current;F
+					pred[nachbar.vertexID] = current;
 					visited[nachbar.vertexID] = true;
 				}
 			}
 		}
 		return found;
+	}
+	private static void minimalerSpannbaum()
+	{
+		
 	}
 
 }
