@@ -14,7 +14,7 @@ public class CompareWeightedEdge implements Comparator<WeightedEdge> {
 		if(o1.weight>o2.weight)
 			return 1;
 		return 0;
-		
+
 	}
 
 }

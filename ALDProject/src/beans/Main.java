@@ -19,8 +19,6 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 
-		
-
 		// 0: Graz
 		// 1: Wien
 		// 2: Klagenfurt
@@ -32,30 +30,28 @@ public class Main {
 		Graph g = null;
 		try {
 			acl = IOAccessLayer.getTheInstance();
-			List<Street> streets = acl.readStreetsFile(new File(BasicServer.ressourcePath+"streets.txt"));			
-			List<City> cities = acl.readCityFile(new File(BasicServer.ressourcePath+"citys.txt"));
+			List<Street> streets = acl.readStreetsFile(new File(BasicServer.ressourcePath + "streets.txt"));
+			List<City> cities = acl.readCityFile(new File(BasicServer.ressourcePath + "citys.txt"));
 			g = new ListGraph(streets.size(), true);
-			for(Street s : streets)
-			{
-			g.addEdge(s.getSource_id(),s.getDestination_id(),s.getDistance());	
+			for (Street s : streets) {
+				g.addEdge(s.getSource_id(), s.getDestination_id(), s.getDistance());
 			}
-			//g.debugPrint();
-			
+			// g.debugPrint();
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+		// findByTiefenSucheRekursiv(g, 1, 8);
 
-		findByTiefenSucheRekursiv(g, 1, 8);
-
-		// findByTiefenSuche(g, 0, 4);
-		// findByBreitenSuche(g, 0, 4);
+		findByBreitenSuche(g, 7, 6);
 		// dijkstra(g, 0, 4);
 
 	}
 
 	private static void findByTiefenSucheRekursiv(Graph g, int von, int nach) {
+		// Oliver: funktioniert
 		boolean[] visited = new boolean[g.numVertices()];
 		int[] pred = new int[g.numVertices()];
 		ArrayList<Integer> flow = new ArrayList<Integer>();
@@ -63,20 +59,19 @@ public class Main {
 		// pred[5] = 0
 		// Wir besuchen 5 über 0
 
-		_findByTiefenSucheRekursiv(g, von, nach, visited, pred,flow);
-		/*for (int i = 0; i < pred.length; i++) {
-			if(visited[i])
-			System.out.println("from "+ pred[i]+" to " + i );
-		}
-		*/
+		_findByTiefenSucheRekursiv(g, von, nach, visited, pred, flow);
+		/*
+		 * for (int i = 0; i < pred.length; i++) { if(visited[i])
+		 * System.out.println("from "+ pred[i]+" to " + i ); }
+		 */
 		System.out.println(flow);
 	}
 
-	private static boolean _findByTiefenSucheRekursiv(Graph g, int current, int nach, boolean[] visited, int[] pred, ArrayList<Integer> flow) {
-		visited[current]=true;
+	private static boolean _findByTiefenSucheRekursiv(Graph g, int current, int nach, boolean[] visited, int[] pred,
+			ArrayList<Integer> flow) {
+		visited[current] = true;
 		flow.add(current);
-		if (current == nach)
-		{
+		if (current == nach) {
 			return true;
 		}
 
@@ -85,7 +80,7 @@ public class Main {
 			if (!visited[n.vertexID]) {
 				pred[n.vertexID] = current;
 
-				boolean found = _findByTiefenSucheRekursiv(g, n.vertexID, nach, visited, pred,flow);
+				boolean found = _findByTiefenSucheRekursiv(g, n.vertexID, nach, visited, pred, flow);
 				if (found)
 					return true;
 
@@ -94,52 +89,35 @@ public class Main {
 		return false;
 	}
 
-	@SuppressWarnings("unused")
-	private static void findByTiefenSuche(Graph g, int von, int nach) {
-
-		Stack<Integer> nodes = new Stack<Integer>();
-
-		boolean[] visited = new boolean[g.numVertices()];
-		int[] pred = new int[g.numVertices()];
-		boolean found = false;
-
-		for (int i = 0; i < pred.length; i++) {
-			pred[i] = -1;
-		}
-
-		nodes.push(von);
-
-		while (!nodes.isEmpty()) {
-
-			int current = nodes.pop();
-			visited[current] = true;
-
-			if (current == nach) {
-				found = true;
-				break;
-			}
-
-			List<WeightedEdge> nachbarn = g.getEdges(current);
-			for (WeightedEdge nachbar : nachbarn) {
-				if (!visited[nachbar.vertexID]) {
-					pred[nachbar.vertexID] = current;
-					nodes.push(nachbar.vertexID);
-				}
-			}
-		}
-
-		if (found) {
-			// Route ausgeben
-			for (int i = 0; i < pred.length; i++) {
-				if(visited[i])
-				System.out.println(i + " über " + pred[i]);
-			}
-		} else {
-			System.out.println("Keine Verbindung gefunden");
-		}
-
-	}
-
+	/*
+	 * @SuppressWarnings("unused") private static void findByTiefenSuche(Graph
+	 * g, int von, int nach) {
+	 * 
+	 * Stack<Integer> nodes = new Stack<Integer>();
+	 * 
+	 * boolean[] visited = new boolean[g.numVertices()]; int[] pred = new
+	 * int[g.numVertices()]; boolean found = false;
+	 * 
+	 * for (int i = 0; i < pred.length; i++) { pred[i] = -1; }
+	 * 
+	 * nodes.push(von);
+	 * 
+	 * while (!nodes.isEmpty()) {
+	 * 
+	 * int current = nodes.pop(); visited[current] = true;
+	 * 
+	 * if (current == nach) { found = true; break; }
+	 * 
+	 * List<WeightedEdge> nachbarn = g.getEdges(current); for (WeightedEdge
+	 * nachbar : nachbarn) { if (!visited[nachbar.vertexID]) {
+	 * pred[nachbar.vertexID] = current; nodes.push(nachbar.vertexID); } } }
+	 * 
+	 * if (found) { // Route ausgeben for (int i = 0; i < pred.length; i++) {
+	 * if(visited[i]) System.out.println(i + " über " + pred[i]); } } else {
+	 * System.out.println("Keine Verbindung gefunden"); }
+	 * 
+	 * }
+	 */
 	private static int nextVertex(int[] dist, boolean[] visited) {
 
 		int minValue = 99999;
@@ -275,47 +253,53 @@ public class Main {
 	}
 
 	private static void findByBreitenSuche(Graph g, int von, int nach) {
+		ArrayList<Integer> flow = new ArrayList<Integer>();
+		boolean[] visited = new boolean[g.numVertices()];
+		boolean found = false;
+		_findByBreitenSuche(g, von, nach, flow, visited, found);
+		System.out.println(found);
+		if (found)
+		{
+			System.out.println(flow);
+		}
+		else
+		{
+			System.out.println(flow + ": Keine Verbindung gefunden");
+		}
+	}
+
+	private static void _findByBreitenSuche(Graph g, int current, int nach, ArrayList<Integer> flow, boolean[] visited,
+			boolean found) {
 
 		ArrayDeque<Integer> nodes = new ArrayDeque<Integer>();
-
-		boolean[] visited = new boolean[g.numVertices()];
+		List<WeightedEdge> nachbarn;
 		int[] pred = new int[g.numVertices()];
-		boolean found = false;
 
-		for (int i = 0; i < pred.length; i++) {
-			pred[i] = -1;
-		}
-
-		nodes.add(von);
-
-		outer: while (!nodes.isEmpty()) {
-
-			int current = nodes.poll();
-			visited[current] = true;
-
-			List<WeightedEdge> nachbarn = g.getEdges(current);
+		nodes.add(current);
+		//flow.add(current);
+		visited[current] = true;
+		//outer: 
+		while ((!nodes.isEmpty()) && ((current = nodes.poll()) > 0)) {
+			flow.add(current);
+			if(current == nach)
+			{
+				
+				found = true;
+				System.out.println(found);
+				break;
+				//break outer;
+			}
+			nachbarn = g.getEdges(current);
 			for (WeightedEdge nachbar : nachbarn) {
 				if (!visited[nachbar.vertexID]) {
 					nodes.add(nachbar.vertexID);
 					pred[nachbar.vertexID] = current;
-
-					if (nachbar.vertexID == nach) {
-						found = true;
-						break outer;
-					}
+					//flow.add(nachbar.vertexID);
+					visited[nachbar.vertexID] = true;
+					System.out.println(current + " zu " + nachbar.vertexID);
 				}
 			}
 		}
-
-		if (found) {
-			// Route ausgeben
-			for (int i = 0; i < pred.length; i++) {
-				System.out.println(i + " über " + pred[i]);
-			}
-		} else {
-			System.out.println("Keine Verbindung gefunden");
-		}
-
 	}
 
 }

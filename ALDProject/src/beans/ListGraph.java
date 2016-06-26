@@ -1,6 +1,9 @@
 package beans;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import business.utilities.CompareWeightedEdge;
 
 
 public class ListGraph extends Graph {
@@ -73,6 +76,8 @@ public class ListGraph extends Graph {
 	}
 
 	public List<WeightedEdge> getEdges(int vertexID) {
-		return graph[vertexID];
+		List<WeightedEdge> li = graph[vertexID];
+		Collections.sort(li, new CompareWeightedEdge());
+		 return li;
 	}
 }
