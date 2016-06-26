@@ -253,11 +253,11 @@ public class Main {
 	}
 
 	private static void findByBreitenSuche(Graph g, int von, int nach) {
+		//Oliver: funktioniert
 		ArrayList<Integer> flow = new ArrayList<Integer>();
 		boolean[] visited = new boolean[g.numVertices()];
 		boolean found = false;
-		_findByBreitenSuche(g, von, nach, flow, visited, found);
-		System.out.println(found);
+		found = _findByBreitenSuche(g, von, nach, flow, visited, found);
 		if (found)
 		{
 			System.out.println(flow);
@@ -268,9 +268,9 @@ public class Main {
 		}
 	}
 
-	private static void _findByBreitenSuche(Graph g, int current, int nach, ArrayList<Integer> flow, boolean[] visited,
+	private static boolean _findByBreitenSuche(Graph g, int current, int nach, ArrayList<Integer> flow, boolean[] visited,
 			boolean found) {
-
+//Oliver: funktioniert
 		ArrayDeque<Integer> nodes = new ArrayDeque<Integer>();
 		List<WeightedEdge> nachbarn;
 		int[] pred = new int[g.numVertices()];
@@ -283,23 +283,19 @@ public class Main {
 			flow.add(current);
 			if(current == nach)
 			{
-				
 				found = true;
-				System.out.println(found);
 				break;
-				//break outer;
 			}
 			nachbarn = g.getEdges(current);
 			for (WeightedEdge nachbar : nachbarn) {
 				if (!visited[nachbar.vertexID]) {
 					nodes.add(nachbar.vertexID);
-					pred[nachbar.vertexID] = current;
-					//flow.add(nachbar.vertexID);
+					pred[nachbar.vertexID] = current;F
 					visited[nachbar.vertexID] = true;
-					System.out.println(current + " zu " + nachbar.vertexID);
 				}
 			}
 		}
+		return found;
 	}
 
 }
