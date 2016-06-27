@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import beans.SearchCriteria;
 import beans.Street;
 import business.client.WorkerThread;
 import business.utilities.IOAccessLayer;
@@ -17,7 +18,6 @@ public class TelnetServer extends AbstractBasicServer {
 
 	private File cityFile, streetsFile;
 	private IOAccessLayer theIOAccessLayerInstance;
-	// Maybe LinkedList??
 	private ArrayList<Street> streetList;
 	private BufferedWriter serverCommand;
 	private boolean isServerActiv = true;
@@ -27,7 +27,6 @@ public class TelnetServer extends AbstractBasicServer {
 			try {
 				new TelnetServer();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
@@ -55,18 +54,37 @@ public class TelnetServer extends AbstractBasicServer {
 		serverCommand.newLine();
 		serverCommand.write("Gestalten Sie die Eingabe wie folgt:");
 		serverCommand.newLine();
-		serverCommand.write("Startort ; Zielort ; Suchkriterium");
+		serverCommand.write("Startort ; Zielort ; Suchkriterium(Breitensuche,Tiefensuche,Dijkstra)");
 		serverCommand.newLine();
 		serverCommand.write("Beenden Sie die Session mit exit");
 		serverCommand.newLine();
 		serverCommand.flush();
 	}
 	
-	public String responseToClient(Socket clientSocket) throws Exception {
+	public String responseToClient(Socket clientSocket,String message) throws Exception {
 		BufferedReader clientResponse = new BufferedReader(
 				new InputStreamReader(clientSocket.getInputStream()));
 		String line;
-		String[] ClientRequest = clientResponse.readLine().split(BasicServer.fileSeparator);
+		String[] clientRequest = message.split(BasicServer.fileSeparator);
+		System.out.println(clientRequest[2]);
+		//GraphBrowser graphBrowser = new GraphBrowser(null, null)
+		if (SearchCriteria.BREITENSUCHE.toString().equals(clientRequest[2].toUpperCase())) {
+			//TODO start breitensuche routine
+			//graphBrowser.findByBreitenSuche(g, von, nach);
+			System.out.println(SearchCriteria.BREITENSUCHE.toString());
+		}
+		else if (SearchCriteria.TIEFENSUCHE.toString().equals(clientRequest[2].toUpperCase())) 
+		{
+			//TODO start tiefensuche routine
+			//graphBrowser.findByTiefenSucheRekursiv(g, von, nach);
+			System.out.println(SearchCriteria.TIEFENSUCHE.toString());
+		}
+		else if (SearchCriteria.DIJKSTRA.toString().equals(clientRequest[2].toUpperCase())){
+			//TODO start dijkstra routine
+			//graphBrowser.dijkstraLichteGraphen(g, von, nach);(g, von, nach);
+			//graphBrowser.dijkstraDichteGraphen(g, von, nach);
+			System.out.println(SearchCriteria.DIJKSTRA.toString());
+		}
 		
 		return "Mario is Fancy";			// serverlogic implementieren
 			
@@ -83,7 +101,7 @@ public class TelnetServer extends AbstractBasicServer {
 			clientThread.start();
 			
 			while (isClientActiv == true) {
-				responseToClient(clientSocket);
+				responseToClient(clientSocket,"");
 			}
 		}
 	}

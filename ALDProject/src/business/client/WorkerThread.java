@@ -44,8 +44,8 @@ public class WorkerThread implements Runnable{
 		try {
 			while(true) {
 				line = serverReader.readLine();
-				if (line.split(":").length == plauseCheck){
-					sendToServer(server.responseToClient(socket));
+				if (line.split(BasicServer.fileSeparator).length == plauseCheck){
+					sendToServer(server.responseToClient(socket,line));
 				}
 				else if (line.equals("exit")){
 						break;
@@ -56,10 +56,8 @@ public class WorkerThread implements Runnable{
 			}	
 			close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
