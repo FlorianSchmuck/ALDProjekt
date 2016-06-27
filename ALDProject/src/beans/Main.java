@@ -36,7 +36,7 @@ public class Main {
 		}
 
 		//findByTiefenSucheRekursiv(g, 1, 8);
-
+		//Tiefensuche bitte noch prüfen! -> flow!
 		//findByBreitenSuche(g, 7, 6);
 		//dijkstraLichteGraphen(g, 7, 6);
 		dijkstraDichteGraphen(g, 9, 5);
@@ -54,6 +54,7 @@ public class Main {
 		_findByTiefenSucheRekursiv(g, von, nach, visited, pred, flow);
 
 		System.out.println(flow);
+		//return flow;
 	}
 
 	private static boolean _findByTiefenSucheRekursiv(Graph g, int current, int nach, boolean[] visited, int[] pred,
@@ -146,7 +147,8 @@ public class Main {
 			}
 		}
 
-		// Pred ausgeben
+		// Pred ausgeben ->muss net unbedingt sein
+		/*
 		for (int i = 0; i < pred.length; i++) {
 			if(pred[i]!=-1)
 			{
@@ -158,14 +160,15 @@ public class Main {
 
 		
 		System.out.println();
+		*/
 		ArrayList<Integer> way = predToWay(pred, von, nach);
 		for (int vertexNumber : way) {
 			flow.add(vertexNumber);
 			// Way ausgeben
-			System.out.print(vertexNumber + " ");
+			//System.out.print(vertexNumber + " ");
 		}
 		// Way ausgeben
-		System.out.println();
+		//System.out.println();
 		System.out.println(flow);
 		//return flow;
 	}
@@ -240,19 +243,22 @@ public class Main {
 				}
 			}
 		}
-		// pred ausgeben
+		// pred ausgeben ->muss net unbedingt sein
+		/*
 		for (int i = 0; i < pred.length; i++) {
 			System.out.println(i + " über " + pred[i]);
 		}
 
 		// Way ausgeben
 		System.out.println();
+		*/
 		ArrayList<Integer> way = predToWay(pred, von, nach);
 		for (int vertexNumber : way) {
 			flow.add(vertexNumber);
-			System.out.print(vertexNumber + " ");
+			// Way ausgeben
+			//System.out.print(vertexNumber + " ");
 		}
-		System.out.println();
+		//System.out.println();
 		System.out.println(flow);
 		//return flow;
 	}
@@ -268,7 +274,7 @@ public class Main {
 			System.out.println(flow);
 		}
 		else
-		{
+		{//oder eben als Return!
 			System.out.println(flow + ": Keine Verbindung gefunden");
 		}
 		//return flow;
