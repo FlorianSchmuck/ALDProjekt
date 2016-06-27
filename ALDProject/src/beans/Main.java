@@ -116,6 +116,7 @@ public class Main {
 		int[] pred = new int[g.numVertices()];
 		int[] dist = new int[g.numVertices()];
 		boolean[] visited = new boolean[g.numVertices()];
+		ArrayList<Integer> flow = new ArrayList<Integer>();
 
 		for (int i = 0; i < dist.length; i++) {
 			dist[i] = 99999;
@@ -148,17 +149,25 @@ public class Main {
 		// Pred ausgeben
 		for (int i = 0; i < pred.length; i++) {
 			if(pred[i]!=-1)
+			{
+			
 			System.out.println(i + " über " + pred[i]);
 			//Ausgabe nur wenn Edge besucht wurde
+			}
 		}
 
-		// Way ausgeben
+		
 		System.out.println();
 		ArrayList<Integer> way = predToWay(pred, von, nach);
 		for (int vertexNumber : way) {
+			flow.add(vertexNumber);
+			// Way ausgeben
 			System.out.print(vertexNumber + " ");
 		}
+		// Way ausgeben
 		System.out.println();
+		System.out.println(flow);
+		//return flow;
 	}
 	
 	private static int nextVertex(int[] dist, boolean[] visited) {
@@ -195,6 +204,7 @@ public class Main {
 		int[] pred = new int[g.numVertices()];
 		int[] dist = new int[g.numVertices()];
 		boolean[] visited = new boolean[g.numVertices()];
+		ArrayList<Integer> flow = new ArrayList<Integer>();
 
 		EdgeHeap heap = new EdgeHeap(g.numVertices());
 		for (int i = 0; i < dist.length; i++) {
@@ -230,7 +240,6 @@ public class Main {
 				}
 			}
 		}
-
 		// pred ausgeben
 		for (int i = 0; i < pred.length; i++) {
 			System.out.println(i + " über " + pred[i]);
@@ -240,10 +249,12 @@ public class Main {
 		System.out.println();
 		ArrayList<Integer> way = predToWay(pred, von, nach);
 		for (int vertexNumber : way) {
+			flow.add(vertexNumber);
 			System.out.print(vertexNumber + " ");
 		}
 		System.out.println();
-
+		System.out.println(flow);
+		//return flow;
 	}
 
 	private static void findByBreitenSuche(Graph g, int von, int nach) {
@@ -260,6 +271,7 @@ public class Main {
 		{
 			System.out.println(flow + ": Keine Verbindung gefunden");
 		}
+		//return flow;
 	}
 
 	private static boolean _findByBreitenSuche(Graph g, int current, int nach, ArrayList<Integer> flow, boolean[] visited,
@@ -290,10 +302,6 @@ public class Main {
 			}
 		}
 		return found;
-	}
-	private static void minimalerSpannbaum()
-	{
-		
 	}
 
 }
