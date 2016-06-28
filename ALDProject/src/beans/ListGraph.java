@@ -14,6 +14,7 @@ public class ListGraph extends Graph {
 	
 	@SuppressWarnings("unchecked")
 	public ListGraph(int numVertices, boolean directed) {
+		numVertices++;
 		graph = new ArrayList[numVertices];
 		for (int i=0; i < numVertices; i++)
 			graph[i] = new ArrayList<WeightedEdge>();
@@ -50,7 +51,7 @@ public class ListGraph extends Graph {
 	public void addEdge(int source, int destination, int weight) {
 		WeightedEdge pv = new WeightedEdge(destination, weight);
 		graph[source].add(pv);
-		if (!directed) {
+		if (directed) {
 			pv = new WeightedEdge(source, weight);
 			graph[destination].add(pv);
 		}

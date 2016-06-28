@@ -48,6 +48,13 @@ public class Street {
 		result = prime * result + sourceCityId;
 		return result;
 	}
+	
+
+	@Override
+	public String toString() {
+		return "Street [name=" + name + ", streetId=" + streetId + ", distance=" + distance + ", sourceCityId="
+				+ sourceCityId + ", destinationCityId=" + destinationCityId + "]";
+	}
 
 	@Override
 	public boolean equals(Object obj) {

@@ -14,6 +14,7 @@ public class ArrayGraph extends Graph {
 	private boolean directed;
 	
 	public ArrayGraph(int numVertices, boolean directed) {
+		numVertices++;
 		graph = new int[numVertices][numVertices];
 		this.numVertices = numVertices;
 		this.directed = directed;

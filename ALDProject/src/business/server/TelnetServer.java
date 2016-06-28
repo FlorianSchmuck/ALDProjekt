@@ -66,7 +66,8 @@ public class TelnetServer extends AbstractBasicServer {
 	
 	private void addToGraph(Graph graph){
 		for (Street s : streetList) {
-			System.out.println(s.getSource_id()+" Dest:"+s.getDestination_id());
+			System.out.println(s.toString());
+			//A3;3;1;9;60
 			graph.addEdge(s.getSource_id(), s.getDestination_id(), s.getDistance());
 		}
 	}
