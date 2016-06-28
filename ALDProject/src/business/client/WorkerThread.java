@@ -20,7 +20,7 @@ public class WorkerThread implements Runnable{
 	
 	public WorkerThread(Socket socket, TelnetServer server) throws IOException {
 		this.socket = socket;
-		serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream(),"utf-8"));
+		serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		serverCommand = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		this.server = server;
 	}
@@ -41,7 +41,6 @@ public class WorkerThread implements Runnable{
 		String line = "";
 		int plauseCheck = 3;
 		try {
-			
 			while(true) {
 				line = serverReader.readLine();
 				if (line.split(BasicServer.fileSeparator).length == plauseCheck){
