@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
+import java.util.Map;
 
 import business.server.BasicServer;
-import business.utilities.CompareWeightedEdge;
 import business.utilities.IOAccessLayer;
 
 public class Main {
@@ -24,7 +22,7 @@ public class Main {
 		try {
 			acl = IOAccessLayer.getTheInstance();
 			List<Street> streets = acl.readStreetsFile(new File(BasicServer.ressourcePath + "streets.txt"));
-			List<City> cities = acl.readCityFile(new File(BasicServer.ressourcePath + "citys.txt"));
+			Map<Integer,City> cities =  acl.readCityFile(new File(BasicServer.ressourcePath + "citys.txt"));
 			g = new ListGraph(streets.size(), true);
 			for (Street s : streets) {
 				g.addEdge(s.getSource_id(), s.getDestination_id(), s.getDistance());
