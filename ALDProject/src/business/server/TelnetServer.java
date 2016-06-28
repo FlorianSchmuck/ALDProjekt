@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import beans.ArrayGraph;
@@ -24,13 +26,15 @@ public class TelnetServer extends AbstractBasicServer {
 	private File cityFile, streetsFile;
 	private IOAccessLayer theIOAccessLayerInstance;
 	private List<Street> streetList;
-	private List<City> cityList;
+	private HashMap<Integer,City> cityList = new HashMap();
 	private BufferedWriter serverCommand;
 	private boolean isServerActiv = true;
 	public static boolean isClientActiv;
 	private VertexTree vertexTree;
 	private Graph listGraph,arrayGraph;
 	private GraphBrowser listGraphBrowser, arrayGraphBrowser;
+	private String path;
+	private List<Integer> flow = new ArrayList<Integer>();
 
 	public static void main(String[] args) {
 			try {
@@ -66,15 +70,13 @@ public class TelnetServer extends AbstractBasicServer {
 	
 	private void addToGraph(Graph graph){
 		for (Street s : streetList) {
-			System.out.println(s.toString());
-			//A3;3;1;9;60
 			graph.addEdge(s.getSource_id(), s.getDestination_id(), s.getDistance());
 		}
 	}
 	
 	
 	private void addToTree(){
-		for (City city : cityList) {
+		for(City city: cityList.values()) {
 			vertexTree.add(city.getName(), city.getId());
 		}
 	}
@@ -100,29 +102,32 @@ public class TelnetServer extends AbstractBasicServer {
 		from = clientRequest[0];
 		to = clientRequest[1];
 		searchcriteria = clientRequest[2];
-		listGraphBrowser = new GraphBrowser(listGraph, serverCommand);
-		arrayGraphBrowser = new GraphBrowser(arrayGraph, serverCommand);
+		listGraphBrowser = new GraphBrowser(listGraph, serverCommand,cityList);
+		//arrayGraphBrowser = new GraphBrowser(arrayGraph, serverCommand);
 		int fromId = vertexTree.find(from).getId();
 		int toId = vertexTree.find(to).getId();
+		
 		
 		if (SearchCriteria.BREITENSUCHE.toString().equals(searchcriteria.toUpperCase())) {
 
 			listGraphBrowser.findByBreitenSuche(listGraph, fromId, toId);
-			arrayGraphBrowser.findByBreitenSuche(arrayGraph, fromId, toId);
-			System.out.println(SearchCriteria.BREITENSUCHE.toString());
+			//arrayGraphBrowser.findByBreitenSuche(arrayGraph, fromId, toId);
+			path = SearchCriteria.BREITENSUCHE.toString();
+			System.out.println(path);
 		}
 		else if (SearchCriteria.TIEFENSUCHE.toString().equals(searchcriteria.toUpperCase())) 
 		{
 			listGraphBrowser.findByTiefenSucheRekursiv(listGraph, fromId, toId);
-			arrayGraphBrowser.findByTiefenSucheRekursiv(arrayGraph, fromId, toId);
-			System.out.println(SearchCriteria.TIEFENSUCHE.toString());
+			//arrayGraphBrowser.findByTiefenSucheRekursiv(arrayGraph, fromId, toId);
+			path = SearchCriteria.TIEFENSUCHE.toString();
+			System.out.println(path);
 		}
 		else if (SearchCriteria.DIJKSTRA.toString().equals(searchcriteria.toUpperCase())){
 			listGraphBrowser.dijkstraLichteGraphen(listGraph, fromId, toId);
-			arrayGraphBrowser.dijkstraDichteGraphen(arrayGraph, fromId, toId);
-			System.out.println(SearchCriteria.DIJKSTRA.toString());
+			//arrayGraphBrowser.dijkstraDichteGraphen(arrayGraph, fromId, toId);
+			path = SearchCriteria.DIJKSTRA.toString();
+			System.out.println(path);
 		}		
-		
 		serverCommand.newLine();
 		serverCommand.flush();
 	}

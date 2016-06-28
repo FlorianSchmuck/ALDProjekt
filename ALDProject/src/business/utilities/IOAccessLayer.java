@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -41,19 +42,19 @@ public class IOAccessLayer {
 		}
 	}
 	
-	public List<City> readCityFile(File file) throws IOException {
+	public HashMap<Integer,City> readCityFile(File file) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		String line = "";
 		String[] splitLine = null;
-		List<City> fileContentList = new ArrayList<>();
+		HashMap<Integer,City> cityList = new HashMap<Integer, City>();
 		while ((line = bufferedReader.readLine()) != null) {
 			splitLine = line.split(BasicServer.fileSeparator);
 			if (splitLine.length == 2){
-				fileContentList.add(new City(splitLine[0], Integer.parseInt(splitLine[1])));
+				cityList.put(Integer.parseInt(splitLine[1]),new City(splitLine[0], Integer.parseInt(splitLine[1])));
 			}
 		}
 		bufferedReader.close();
-		return fileContentList;
+		return cityList;
 	}
 	
 	public List<Street> readStreetsFile(File file) throws IOException {

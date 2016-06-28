@@ -4,8 +4,10 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import beans.City;
 import beans.EdgeHeap;
 import beans.Graph;
 import beans.WeightedEdge;
@@ -14,10 +16,12 @@ public class GraphBrowser {
 
 	private Graph graph;
 	private BufferedWriter serverCommand;
+	private HashMap<Integer,City> cityList;
 
-	public GraphBrowser(Graph graph, BufferedWriter serverCommand) {
+	public GraphBrowser(Graph graph, BufferedWriter serverCommand,HashMap<Integer,City> cityList) {
 		this.graph = graph;
 		this.serverCommand = serverCommand;
+		this.cityList = cityList;
 		// TODO print to client
 	}
 
@@ -30,19 +34,35 @@ public class GraphBrowser {
 		_findByTiefenSucheRekursiv(g, von, nach, visited, pred, flow);
 
 		System.out.println(flow);
-		writeFlow(flow);
+		writeFlow(flow,"Tiefensuche :");
 	}
 
-	private void writeFlow(List<Integer> flow) {
+	private void writeFlow(List<Integer> flow,String methode) {
 		try {
+			serverCommand.write(methode);
 			for (Integer integer : flow) {
 				serverCommand.write(integer.toString());
 			}
 			serverCommand.flush();
+			serverCommand.newLine();
+		} catch (Exception e) {
+
+		}
+		writeCity(flow);
+	}
+	private void writeCity(List<Integer> flow) {
+		try {
+			serverCommand.write("");
+			for (Integer integer : flow) {
+			serverCommand.write(cityList.get(integer).getName()+"-");
+			}
+			serverCommand.flush();
+			serverCommand.newLine();
 		} catch (Exception e) {
 
 		}
 	}
+
 
 	private boolean _findByTiefenSucheRekursiv(Graph g, int current, int nach, boolean[] visited, int[] pred,
 			List<Integer> flow) {
@@ -109,7 +129,7 @@ public class GraphBrowser {
 			// System.out.print(vertexNumber + " ");
 		}
 		System.out.println(flow);
-		writeFlow(flow);
+		writeFlow(flow,"Dijkstra :");
 		// return flow;
 	}
 
@@ -189,7 +209,7 @@ public class GraphBrowser {
 
 		}
 		System.out.println(flow);
-		writeFlow(flow);
+		writeFlow(flow,"Dijkstra :");
 		// return flow;
 	}
 
@@ -201,10 +221,10 @@ public class GraphBrowser {
 		found = _findByBreitenSuche(g, von, nach, flow, visited, found);
 		if (found) {
 			System.out.println(flow);
-			writeFlow(flow);
+			writeFlow(flow,"Breitensuche :");
 		} else {// oder eben als Return!
 			System.out.println(flow + ": Keine Verbindung gefunden");
-			writeFlow(flow);
+			writeFlow(flow,"Breitensuche :");
 		}
 		// return flow;
 	}
