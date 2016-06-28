@@ -67,7 +67,7 @@ public class VertexTree<Type>{
 		if (current == null) {
 			return null;
 		}
-		int vgl = compare(current.getValue(),needle);// ADD COMPARE Method!!!compare(needle, current.getValue());
+		int vgl = compare(current.getValue(),needle);
 		if (vgl == 0) {		// Gefunden
 			return current;
 		}
@@ -80,9 +80,8 @@ public class VertexTree<Type>{
 	}
 	
 	private int compare(Type val, Type needle) {
-		//is this required?
-		String cmp1 = val.toString();
-		String cmp2 = needle.toString();
+		String cmp1 = val.toString().toUpperCase();
+		String cmp2 = needle.toString().toUpperCase();
 		return cmp1.compareTo(cmp2);
 	}
 	/**
