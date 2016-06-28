@@ -1,13 +1,9 @@
 package beans;
 
 import java.util.List;
+import java.util.Comparator;
 
-public abstract class VertexTree<Type> {
-
-	//private City[] vertextTreeArray;
-	private int count = 0;
-	private int index = 0 ;
-	private int capicity;
+public class VertexTree<Type>{
 	private Node<Type> root;
 	
 	public Node<Type> getRoot() {
@@ -20,15 +16,15 @@ public abstract class VertexTree<Type> {
 	 * Neues Element hinzufügen
 	 * @param elem Hinzuzufügendes Element
 	 */
-	public void add(Type elem) {
-		Node<Type> neu = new Node<Type>(elem);
+	public void add(Type elem,int id) {
+		Node<Type> neu = new Node<Type>(elem,id);
 		if (root == null) {			// Fall 1: Baum ist leer
 			root = neu;
 			return;
 		}
 		Node<Type> node = root;				// Fall 2: Baum ist nicht leer
 		while (true) {
-			int vgl = 0;//compare(elem, node.getValue()); Add Compare
+			int vgl = node.compareTo(neu);// Add Compare
 			if (vgl < 0) {					// kleiner
 				if (node.getLeftChild() == null) {
 					node.setLeftChild(neu);
@@ -52,6 +48,7 @@ public abstract class VertexTree<Type> {
 	}
 
 	/**
+	 * 
 	 * Element im Baum finden (startet bei Root-Node)
 	 * @param needle Zu suchendes Element
 	 * @return Knoten des Elements
@@ -70,7 +67,7 @@ public abstract class VertexTree<Type> {
 		if (current == null) {
 			return null;
 		}
-		int vgl = 0;// ADD COMPARE Method!!!compare(needle, current.getValue());
+		int vgl = compare(current.getValue(),needle);// ADD COMPARE Method!!!compare(needle, current.getValue());
 		if (vgl == 0) {		// Gefunden
 			return current;
 		}
@@ -82,6 +79,12 @@ public abstract class VertexTree<Type> {
 		}
 	}
 	
+	private int compare(Type val, Type needle) {
+		//is this required?
+		String cmp1 = val.toString();
+		String cmp2 = needle.toString();
+		return cmp1.compareTo(cmp2);
+	}
 	/**
 	 * Funktion zur Ausgabe des gesamten Baums.
 	 */

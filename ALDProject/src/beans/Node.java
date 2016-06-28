@@ -1,11 +1,20 @@
 package beans;
 
-public class Node<Type> {
+public class Node<Type> implements Comparable<Node<Type>>{
 	protected Node<Type> leftChild;
 	protected Node<Type> rightChild;
 	protected Node<Type> parent;
 	protected final Type value;
+	protected int id;
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public Type getValue() {
 		return value;
 	}
@@ -34,12 +43,28 @@ public class Node<Type> {
 		this.parent = parent;
 	}
 
-	Node(Type value){
+	public Node(Type value,int idnr){
 		this.value = value;
 		leftChild = null;
 		rightChild = null;
+		this.id = idnr;
 		
 	}
+
+	@Override
+	public int compareTo(Node<Type> o) {
+		// return getValue().compareTo(o.getValue());
+		String cmp1 = getValue().toString();
+		String cmp2 = o.getValue().toString();
+		return cmp1.compareTo(cmp2);
+	}
+
+	@Override
+	public String toString() {
+		return "Node [value=" + value + "]";
+	}
+
+
 	
 	
 
