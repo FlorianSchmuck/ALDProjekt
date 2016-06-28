@@ -7,10 +7,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.List;
 
+import beans.ArrayGraph;
+import beans.City;
+import beans.Graph;
+import beans.ListGraph;
 import beans.SearchCriteria;
 import beans.Street;
+import beans.VertexTree;
 import business.client.WorkerThread;
 import business.utilities.IOAccessLayer;
 
@@ -18,10 +23,14 @@ public class TelnetServer extends AbstractBasicServer {
 
 	private File cityFile, streetsFile;
 	private IOAccessLayer theIOAccessLayerInstance;
-	private ArrayList<Street> streetList;
+	private List<Street> streetList;
+	private List<City> cityList;
 	private BufferedWriter serverCommand;
 	private boolean isServerActiv = true;
 	public static boolean isClientActiv;
+	private VertexTree vertexTree;
+	private Graph listGraph,arrayGraph;
+	private GraphBrowser listGraphBrowser, arrayGraphBrowser;
 
 	public static void main(String[] args) {
 			try {
@@ -42,10 +51,31 @@ public class TelnetServer extends AbstractBasicServer {
 	}
 
 	private void initializeTelnetServer() throws IOException {
-		streetList = new ArrayList<>();
+		vertexTree = new VertexTree<City>();
 		theIOAccessLayerInstance = IOAccessLayer.getTheInstance();
 		cityFile = super.getFileFromRessource("citys.txt");
 		streetsFile = super.getFileFromRessource("streets.txt");
+		streetList = theIOAccessLayerInstance.readStreetsFile(streetsFile);
+		cityList = theIOAccessLayerInstance.readCityFile(cityFile);
+		addToTree();
+		listGraph = new ListGraph(cityList.size(),false);	//licht
+		arrayGraph = new ArrayGraph(cityList.size(),false); //dicht
+		addToGraph(listGraph);
+		addToGraph(arrayGraph);
+	}
+	
+	private void addToGraph(Graph graph){
+		for (Street s : streetList) {
+			System.out.println(s.getSource_id()+" Dest:"+s.getDestination_id());
+			graph.addEdge(s.getSource_id(), s.getDestination_id(), s.getDistance());
+		}
+	}
+	
+	
+	private void addToTree(){
+		for (City city : cityList) {
+			vertexTree.add(city.getName(), city.getId());
+		}
 	}
 
 	private void startServerShell(Socket clientSocket) throws Exception {
@@ -61,34 +91,39 @@ public class TelnetServer extends AbstractBasicServer {
 		serverCommand.flush();
 	}
 	
-	public String responseToClient(Socket clientSocket,String message) throws Exception {
+	public void responseToClient(Socket clientSocket,String message) throws Exception {
 		BufferedReader clientResponse = new BufferedReader(
 				new InputStreamReader(clientSocket.getInputStream()));
-		String line;
+		String from,to,searchcriteria;
 		String[] clientRequest = message.split(BasicServer.fileSeparator);
-		System.out.println(clientRequest[2]);
-		//GraphBrowser graphBrowser = new GraphBrowser(null, null)
-		if (SearchCriteria.BREITENSUCHE.toString().equals(clientRequest[2].toUpperCase())) {
-			//TODO start breitensuche routine
-			//graphBrowser.findByBreitenSuche(g, von, nach);
+		from = clientRequest[0];
+		to = clientRequest[1];
+		searchcriteria = clientRequest[2];
+		listGraphBrowser = new GraphBrowser(listGraph, serverCommand);
+		arrayGraphBrowser = new GraphBrowser(arrayGraph, serverCommand);
+		int fromId = vertexTree.find(from).getId();
+		int toId = vertexTree.find(to).getId();
+		
+		if (SearchCriteria.BREITENSUCHE.toString().equals(searchcriteria.toUpperCase())) {
+
+			listGraphBrowser.findByBreitenSuche(listGraph, fromId, toId);
+			arrayGraphBrowser.findByBreitenSuche(arrayGraph, fromId, toId);
 			System.out.println(SearchCriteria.BREITENSUCHE.toString());
 		}
-		else if (SearchCriteria.TIEFENSUCHE.toString().equals(clientRequest[2].toUpperCase())) 
+		else if (SearchCriteria.TIEFENSUCHE.toString().equals(searchcriteria.toUpperCase())) 
 		{
-			//TODO start tiefensuche routine
-			//graphBrowser.findByTiefenSucheRekursiv(g, von, nach);
+			listGraphBrowser.findByTiefenSucheRekursiv(listGraph, fromId, toId);
+			arrayGraphBrowser.findByTiefenSucheRekursiv(arrayGraph, fromId, toId);
 			System.out.println(SearchCriteria.TIEFENSUCHE.toString());
 		}
-		else if (SearchCriteria.DIJKSTRA.toString().equals(clientRequest[2].toUpperCase())){
-			//TODO start dijkstra routine
-			//graphBrowser.dijkstraLichteGraphen(g, von, nach);(g, von, nach);
-			//graphBrowser.dijkstraDichteGraphen(g, von, nach);
+		else if (SearchCriteria.DIJKSTRA.toString().equals(searchcriteria.toUpperCase())){
+			listGraphBrowser.dijkstraLichteGraphen(listGraph, fromId, toId);
+			arrayGraphBrowser.dijkstraDichteGraphen(arrayGraph, fromId, toId);
 			System.out.println(SearchCriteria.DIJKSTRA.toString());
-		}
+		}		
 		
-		return "Mario is Fancy";			// serverlogic implementieren
-			
-		
+		serverCommand.newLine();
+		serverCommand.flush();
 	}
 	
 	@Override

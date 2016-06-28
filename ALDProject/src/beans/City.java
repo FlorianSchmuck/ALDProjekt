@@ -49,6 +49,12 @@ public class City implements Comparator<City> {
 	public EdgeHeap getVertexHeap() {
 		return vHeap;
 	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
 
 	@Override
 	public int compare(City o1, City o2) {

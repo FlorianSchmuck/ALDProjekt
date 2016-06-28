@@ -1,6 +1,7 @@
 package business.server;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +14,15 @@ public class GraphBrowser {
 
 	private Graph graph;
 	private BufferedWriter serverCommand;
-	
-	public GraphBrowser(Graph graph,BufferedWriter serverCommand) {
+
+	public GraphBrowser(Graph graph, BufferedWriter serverCommand) {
 		this.graph = graph;
 		this.serverCommand = serverCommand;
-		//TODO print to client
+		// TODO print to client
 	}
-	
+
 	public void findByTiefenSucheRekursiv(Graph g, int von, int nach) {
-		
+
 		boolean[] visited = new boolean[g.numVertices()];
 		int[] pred = new int[g.numVertices()];
 		List<Integer> flow = new ArrayList<Integer>();
@@ -29,8 +30,20 @@ public class GraphBrowser {
 		_findByTiefenSucheRekursiv(g, von, nach, visited, pred, flow);
 
 		System.out.println(flow);
+		writeFlow(flow);
 	}
-	
+
+	private void writeFlow(List<Integer> flow) {
+		try {
+			for (Integer integer : flow) {
+				serverCommand.write(integer.toString());
+			}
+			serverCommand.flush();
+		} catch (Exception e) {
+
+		}
+	}
+
 	private boolean _findByTiefenSucheRekursiv(Graph g, int current, int nach, boolean[] visited, int[] pred,
 			List<Integer> flow) {
 		visited[current] = true;
@@ -52,9 +65,9 @@ public class GraphBrowser {
 		}
 		return false;
 	}
-	
+
 	public void dijkstraDichteGraphen(Graph g, int von, int nach) {
-		//Oliver: funktioniert
+		// Oliver: funktioniert
 		System.out.println(g.numVertices());
 		int[] pred = new int[g.numVertices()];
 		int[] dist = new int[g.numVertices()];
@@ -88,17 +101,18 @@ public class GraphBrowser {
 				}
 			}
 		}
-		
+
 		List<Integer> way = predToWay(pred, von, nach);
 		for (int vertexNumber : way) {
 			flow.add(vertexNumber);
 			// Way ausgeben
-			//System.out.print(vertexNumber + " ");
+			// System.out.print(vertexNumber + " ");
 		}
 		System.out.println(flow);
-		//return flow;
+		writeFlow(flow);
+		// return flow;
 	}
-	
+
 	private int nextVertex(int[] dist, boolean[] visited) {
 
 		int minValue = 99999;
@@ -126,7 +140,7 @@ public class GraphBrowser {
 
 		return way;
 	}
-	
+
 	public void dijkstraLichteGraphen(Graph g, int von, int nach) {
 
 		int[] pred = new int[g.numVertices()];
@@ -168,48 +182,47 @@ public class GraphBrowser {
 				}
 			}
 		}
-		
+
 		List<Integer> way = predToWay(pred, von, nach);
 		for (int vertexNumber : way) {
 			flow.add(vertexNumber);
-			
+
 		}
 		System.out.println(flow);
-		//return flow;
+		writeFlow(flow);
+		// return flow;
 	}
-	
+
 	public void findByBreitenSuche(Graph g, int von, int nach) {
-		//Oliver: funktioniert
+		// Oliver: funktioniert
 		List<Integer> flow = new ArrayList<Integer>();
 		boolean[] visited = new boolean[g.numVertices()];
 		boolean found = false;
 		found = _findByBreitenSuche(g, von, nach, flow, visited, found);
-		if (found)
-		{
+		if (found) {
 			System.out.println(flow);
-		}
-		else
-		{//oder eben als Return!
+			writeFlow(flow);
+		} else {// oder eben als Return!
 			System.out.println(flow + ": Keine Verbindung gefunden");
+			writeFlow(flow);
 		}
-		//return flow;
+		// return flow;
 	}
 
 	private boolean _findByBreitenSuche(Graph g, int current, int nach, List<Integer> flow, boolean[] visited,
 			boolean found) {
-//Oliver: funktioniert
+		// Oliver: funktioniert
 		ArrayDeque<Integer> nodes = new ArrayDeque<Integer>();
 		List<WeightedEdge> nachbarn;
 		int[] pred = new int[g.numVertices()];
 
 		nodes.add(current);
-		//flow.add(current);
+		// flow.add(current);
 		visited[current] = true;
-		//outer: 
+		// outer:
 		while ((!nodes.isEmpty()) && ((current = nodes.poll()) > 0)) {
 			flow.add(current);
-			if(current == nach)
-			{
+			if (current == nach) {
 				found = true;
 				break;
 			}
@@ -224,6 +237,5 @@ public class GraphBrowser {
 		}
 		return found;
 	}
-
 
 }

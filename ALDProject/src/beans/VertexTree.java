@@ -101,7 +101,7 @@ public class VertexTree<Type>{
 		if (current == null) {
 			return;
 		}
-		System.out.println(prefix + current.getValue());
+		System.out.println(prefix + current.getValue().toString());
 		printTree(current.getLeftChild(), prefix + " L ");
 		printTree(current.getRightChild(), prefix + " R ");
 	}

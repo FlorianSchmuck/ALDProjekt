@@ -50,7 +50,7 @@ public class ListGraph extends Graph {
 	public void addEdge(int source, int destination, int weight) {
 		WeightedEdge pv = new WeightedEdge(destination, weight);
 		graph[source].add(pv);
-		if (directed) {
+		if (!directed) {
 			pv = new WeightedEdge(source, weight);
 			graph[destination].add(pv);
 		}
@@ -69,7 +69,7 @@ public class ListGraph extends Graph {
 	public void removeEdge(int source, int destination) {
 		WeightedEdge pv = findEdge(source, destination);
 		graph[source].remove(pv);
-		if (directed) {
+		if (!directed) {
 			pv = findEdge(destination, source);
 			graph[source].remove(pv);
 		}

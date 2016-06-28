@@ -25,9 +25,7 @@ public class WorkerThread implements Runnable{
 	}
 	
 	public void sendToServer(String msg) throws IOException{
-		serverCommand.write(msg);
-		serverCommand.newLine();
-		serverCommand.flush();
+		
 	}
 	
 	public void close() throws IOException{
@@ -45,7 +43,7 @@ public class WorkerThread implements Runnable{
 			while(true) {
 				line = serverReader.readLine();
 				if (line.split(BasicServer.fileSeparator).length == plauseCheck){
-					sendToServer(server.responseToClient(socket,line));
+					server.responseToClient(socket,line);
 				}
 				else if (line.equals("exit")){
 						break;

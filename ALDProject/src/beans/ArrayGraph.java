@@ -52,7 +52,7 @@ public class ArrayGraph extends Graph {
 	
 	public void removeEdge(int source, int destination) {
 		graph[source][destination] = 0;
-		if (directed)
+		if (!directed)
 			graph[destination][source] = 0;
 	}
 	
