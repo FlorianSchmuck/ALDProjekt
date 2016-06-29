@@ -67,4 +67,8 @@ public class ArrayGraph extends Graph {
 		}
 		return edges;
 	}
+
+	public boolean getDirected() {
+		return directed;
+	}
 }

@@ -104,7 +104,7 @@ public class TelnetServer extends AbstractBasicServer {
 		to = clientRequest[1];
 		searchcriteria = clientRequest[2];
 		listGraphBrowser = new GraphBrowser(listGraph, serverCommand,cityList);
-		//arrayGraphBrowser = new GraphBrowser(arrayGraph, serverCommand);
+		arrayGraphBrowser = new GraphBrowser(arrayGraph, serverCommand,cityList);
 		
 		Node<City> temp = vertexTree.find(from);
 		int fromId = searchNode(from);
@@ -126,8 +126,9 @@ public class TelnetServer extends AbstractBasicServer {
 			System.out.println(path);
 		}
 		else if (SearchCriteria.DIJKSTRA.toString().equals(searchcriteria.toUpperCase())){
-			listGraphBrowser.dijkstraLichteGraphen(listGraph, fromId, toId);
-			//arrayGraphBrowser.dijkstraDichteGraphen(arrayGraph, fromId, toId);
+			//listGraphBrowser.dijkstra(listGraph, fromId, toId); - Dichte Graphen
+			System.out.println(fromId + " to " + toId);
+			arrayGraphBrowser.dijkstra(arrayGraph, fromId, toId);
 			path = SearchCriteria.DIJKSTRA.toString();
 			System.out.println(path);
 		}		

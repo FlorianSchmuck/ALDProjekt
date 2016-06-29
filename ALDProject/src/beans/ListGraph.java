@@ -52,7 +52,7 @@ public class ListGraph extends Graph {
 	public void addEdge(int source, int destination, int weight) {
 		WeightedEdge pv = new WeightedEdge(destination, weight);
 		graph[source].add(pv);
-		if (directed) {
+		if (!directed) {
 			pv = new WeightedEdge(source, weight);
 			graph[destination].add(pv);
 		}
@@ -81,5 +81,10 @@ public class ListGraph extends Graph {
 		List<WeightedEdge> li = graph[vertexID];
 		Collections.sort(li, new CompareWeightedEdge());
 		 return li;
+	}
+
+	public boolean getDirected() {
+		// TODO Auto-generated method stub
+		return directed;
 	}
 }
