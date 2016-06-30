@@ -8,29 +8,28 @@ import java.util.HashMap;
 import java.util.List;
 
 import beans.City;
-import beans.EdgeHeap;
-import beans.Graph;
-import beans.WeightedEdge;
+import beans.graph.EdgeHeap;
+import beans.graph.Graph;
+import beans.graph.WeightedEdge;
 
 public class GraphBrowser {
 
 	private Graph graph;
 	private BufferedWriter serverCommand;
-	private HashMap<Integer,City> cityList;
+	private HashMap<Integer, City> cityList;
 
-	public GraphBrowser(Graph graph, BufferedWriter serverCommand,HashMap<Integer,City> cityList) {
+	public GraphBrowser(Graph graph, BufferedWriter serverCommand, HashMap<Integer, City> cityList) {
 		this.graph = graph;
 		this.serverCommand = serverCommand;
 		this.cityList = cityList;
 		// TODO print to client
 	}
 
-	
-	private void writeFlow(List<Integer> flow,String methode,int[] pred) {
+	private void writeFlow(List<Integer> flow, String methode, int[] pred) {
 		try {
 			serverCommand.write(methode);
 			for (Integer integer : flow) {
-				serverCommand.write(integer.toString()+" predecessor:" + pred[integer] + " ### ");
+				serverCommand.write(integer.toString() + " predecessor:" + pred[integer] + " ### ");
 			}
 			serverCommand.flush();
 			serverCommand.newLine();
@@ -39,11 +38,12 @@ public class GraphBrowser {
 		}
 		writeCity(flow);
 	}
-	private void writeFlow(List<Integer> flow,String methode) {
+
+	private void writeFlow(List<Integer> flow, String methode) {
 		try {
 			serverCommand.write(methode);
 			for (Integer integer : flow) {
-				serverCommand.write(integer.toString()+"->");
+				serverCommand.write(integer.toString() + "->");
 			}
 			serverCommand.flush();
 			serverCommand.newLine();
@@ -53,13 +53,12 @@ public class GraphBrowser {
 		writeCity(flow);
 		writeDistance(flow);
 	}
-	
-	
+
 	private void writeCity(List<Integer> flow) {
 		try {
 			serverCommand.write("");
 			for (Integer integer : flow) {
-			serverCommand.write(cityList.get(integer).getName()+"-");
+				serverCommand.write(cityList.get(integer).getName() + "-");
 			}
 			serverCommand.flush();
 			serverCommand.newLine();
@@ -67,25 +66,22 @@ public class GraphBrowser {
 
 		}
 	}
+
 	private void writeDistance(List<Integer> flow) {
 		try {
 			serverCommand.write("");
-			int prev=-1;
-			int distance=0;
-			for (int current =0;current<flow.size();current++)
-			{
-			if(prev<0)
-			{
-				prev=current;
-				continue;
-			}
-			else 
-			{
-			distance = distance + graph.getEdgeWeight(flow.get(prev), flow.get(current));
-			prev=current;
-			System.out.println(prev);
-			System.out.println(current);
-			}
+			int previous = -1;
+			int distance = 0;
+			for (int current = 0; current < flow.size(); current++) {
+				if (previous < 0) {
+					previous = current;
+				} 
+				else {
+					distance = distance + graph.getEdgeWeight(flow.get(previous), flow.get(current));
+					previous = current;
+					System.out.println(previous);
+					System.out.println(current);
+				}
 			}
 			serverCommand.write("Distance: " + distance);
 			serverCommand.flush();
@@ -94,6 +90,7 @@ public class GraphBrowser {
 
 		}
 	}
+
 	public void findByTiefenSucheRekursiv(Graph g, int von, int nach) {
 
 		boolean[] visited = new boolean[g.numVertices()];
@@ -103,10 +100,8 @@ public class GraphBrowser {
 		_findByTiefenSucheRekursiv(g, von, nach, visited, pred, flow);
 
 		System.out.println(flow);
-		writeFlow(flow,"Tiefensuche :",pred);
+		writeFlow(flow, "Tiefensuche :", pred);
 	}
-
-	
 
 	private boolean _findByTiefenSucheRekursiv(Graph g, int current, int nach, boolean[] visited, int[] pred,
 			List<Integer> flow) {
@@ -165,14 +160,10 @@ public class GraphBrowser {
 			}
 		}
 
-		List<Integer> way = predToWay(pred, von, nach);
-		for (int vertexNumber : way) {
-			flow.add(vertexNumber);
-			// Way ausgeben
-			// System.out.print(vertexNumber + " ");
-		}
+		flow = predToWay(pred, von, nach);
+
 		System.out.println(flow);
-		writeFlow(flow,"Dijkstra :");
+		writeFlow(flow, "Dijkstra :");
 		// return flow;
 	}
 
@@ -203,80 +194,68 @@ public class GraphBrowser {
 
 		return way;
 	}
-/*
-	public void dijkstraLichteGraphen(Graph g, int von, int nach) {
 
-		int[] pred = new int[g.numVertices()];
-		int[] dist = new int[g.numVertices()];
-		boolean[] visited = new boolean[g.numVertices()];
-		List<Integer> flow = new ArrayList<Integer>();
-
-		EdgeHeap heap = new EdgeHeap(g.numVertices());
-		for (int i = 0; i < dist.length; i++) {
-			dist[i] = 99999;
-			heap.insert(new WeightedEdge(i, 99999));
-			pred[i] = -1;
-		}
-
-		dist[von] = 0;
-		heap.setPriority(von, 0);
-
-		while (!heap.isEmpty()) {
-
-			WeightedEdge cur = heap.remove();
-
-			if (cur.vertexID == nach)
-				break;
-
-			List<WeightedEdge> nachbarn = g.getEdges(cur.vertexID);
-			for (WeightedEdge nachbar : nachbarn) {
-
-				int distBisHier = dist[cur.vertexID]; // Alt: cur.weight
-				int distZumNachbar = nachbar.weight;
-
-				int distInsg = distBisHier + distZumNachbar;
-
-				if (distInsg < dist[nachbar.vertexID]) {
-
-					dist[nachbar.vertexID] = distInsg;
-					heap.setPriority(nachbar.vertexID, distInsg);
-
-					pred[nachbar.vertexID] = cur.vertexID;
-				}
-			}
-		}
-
-		List<Integer> way = predToWay(pred, von, nach);
-		for (int vertexNumber : way) {
-			flow.add(vertexNumber);
-
-		}
-		System.out.println(flow);
-		writeFlow(flow,"Dijkstra :");
-		// return flow;
-	}
-*/
+	/*
+	 * public void dijkstraLichteGraphen(Graph g, int von, int nach) {
+	 * 
+	 * int[] pred = new int[g.numVertices()]; int[] dist = new
+	 * int[g.numVertices()]; boolean[] visited = new boolean[g.numVertices()];
+	 * List<Integer> flow = new ArrayList<Integer>();
+	 * 
+	 * EdgeHeap heap = new EdgeHeap(g.numVertices()); for (int i = 0; i <
+	 * dist.length; i++) { dist[i] = 99999; heap.insert(new WeightedEdge(i,
+	 * 99999)); pred[i] = -1; }
+	 * 
+	 * dist[von] = 0; heap.setPriority(von, 0);
+	 * 
+	 * while (!heap.isEmpty()) {
+	 * 
+	 * WeightedEdge cur = heap.remove();
+	 * 
+	 * if (cur.vertexID == nach) break;
+	 * 
+	 * List<WeightedEdge> nachbarn = g.getEdges(cur.vertexID); for (WeightedEdge
+	 * nachbar : nachbarn) {
+	 * 
+	 * int distBisHier = dist[cur.vertexID]; // Alt: cur.weight int
+	 * distZumNachbar = nachbar.weight;
+	 * 
+	 * int distInsg = distBisHier + distZumNachbar;
+	 * 
+	 * if (distInsg < dist[nachbar.vertexID]) {
+	 * 
+	 * dist[nachbar.vertexID] = distInsg; heap.setPriority(nachbar.vertexID,
+	 * distInsg);
+	 * 
+	 * pred[nachbar.vertexID] = cur.vertexID; } } }
+	 * 
+	 * List<Integer> way = predToWay(pred, von, nach); for (int vertexNumber :
+	 * way) { flow.add(vertexNumber);
+	 * 
+	 * } System.out.println(flow); writeFlow(flow,"Dijkstra :"); // return flow;
+	 * }
+	 */
 	public void findByBreitenSuche(Graph g, int von, int nach) {
 		// Oliver: funktioniert
 		List<Integer> flow = new ArrayList<Integer>();
 		boolean[] visited = new boolean[g.numVertices()];
 		boolean found = false;
 		int[] pred = new int[g.numVertices()];
-		found = _findByBreitenSuche(g, von, nach, flow, visited, found,pred);
+		found = _findByBreitenSuche(g, von, nach, flow, visited, found, pred);
 		if (found) {
 			System.out.println(flow);
-			writeFlow(flow,"Breitensuche :",pred);
+			writeFlow(flow, "Breitensuche :", pred);
 		} else {// oder eben als Return!
 			System.out.println(flow + ": Keine Verbindung gefunden");
-			writeFlow(flow,"Breitensuche :",pred);
+			writeFlow(flow, "Keine Verbindung gefunden", pred);
 		}
 		// return flow;
 	}
 
 	private boolean _findByBreitenSuche(Graph g, int current, int nach, List<Integer> flow, boolean[] visited,
-			boolean found,int[] pred) {
+			boolean found, int[] pred) {
 		// Oliver: funktioniert
-		ArrayDeque<Integer> nodes = new ArrayDeque<Integer>();
+		ArrayDeque<Integer> nodes = new ArrayDeque<Integer>(10000);
 		List<WeightedEdge> nachbarn;
 
 		nodes.add(current);

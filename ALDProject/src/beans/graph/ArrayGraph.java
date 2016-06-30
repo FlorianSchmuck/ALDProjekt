@@ -1,4 +1,4 @@
-package beans;
+package beans.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +15,7 @@ public class ArrayGraph extends Graph {
 	
 	public ArrayGraph(int numVertices, boolean directed) {
 		numVertices++;
+		//starts with 1|1
 		graph = new int[numVertices][numVertices];
 		this.numVertices = numVertices;
 		this.directed = directed;

@@ -1,4 +1,4 @@
-package beans;
+package beans.tree;
 
 import java.util.List;
 import java.util.Comparator;

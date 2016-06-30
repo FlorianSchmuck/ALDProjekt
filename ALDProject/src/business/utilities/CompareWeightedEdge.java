@@ -2,7 +2,7 @@ package business.utilities;
 
 import java.util.Comparator;
 
-import beans.WeightedEdge;
+import beans.graph.WeightedEdge;
 
 public class CompareWeightedEdge implements Comparator<WeightedEdge> {
 

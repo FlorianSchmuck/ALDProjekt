@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import beans.graph.EdgeHeap;
+import beans.graph.WeightedEdge;
 import business.utilities.CompareStreets;
 
 public class City implements Comparator<City> {

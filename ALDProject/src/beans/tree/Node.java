@@ -1,4 +1,4 @@
-package beans;
+package beans.tree;
 
 public class Node<Type> implements Comparable<Node<Type>>{
 	protected Node<Type> leftChild;

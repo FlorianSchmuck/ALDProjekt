@@ -1,4 +1,4 @@
-package beans;
+package beans.graph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,11 +9,10 @@ import business.utilities.CompareWeightedEdge;
 
 public class ListGraph extends Graph {
 
-	private ArrayList<WeightedEdge>[] graph;
+	private List<WeightedEdge>[] graph;
 	private int numVertices;
 	private boolean directed;
 	
-	@SuppressWarnings("unchecked")
 	public ListGraph(int numVertices, boolean directed) {
 		numVertices++;
 		graph = new ArrayList[numVertices];

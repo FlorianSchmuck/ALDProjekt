@@ -7,13 +7,13 @@ import java.util.List;
 
 import org.junit.Test;
 
-import beans.ArrayGraph;
 import beans.City;
-import beans.Graph;
-import beans.ListGraph;
-import beans.Node;
 import beans.Street;
-import beans.VertexTree;
+import beans.graph.ArrayGraph;
+import beans.graph.Graph;
+import beans.graph.ListGraph;
+import beans.tree.Node;
+import beans.tree.VertexTree;
 import business.server.BasicServer;
 import business.server.GraphBrowser;
 import business.utilities.IOAccessLayer;

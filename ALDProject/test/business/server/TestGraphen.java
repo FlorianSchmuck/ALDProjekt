@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import beans.ArrayGraph;
 import beans.City;
-import beans.ListGraph;
 import beans.Street;
+import beans.graph.ArrayGraph;
+import beans.graph.ListGraph;
 import business.utilities.IOAccessLayer;
 
 public class TestGraphen {
